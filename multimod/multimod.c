@@ -26,13 +26,13 @@ return (uint64_t)0;
 
 uint64_t mod(uint64_t x,uint64_t y){
     uint64_t m=y;
-    while(com(m,x)==0||com(m,x)==1)//高效减去m的倍数m<=x
+    while(com(m,x)==(uint64_t)0||com(m,x)==(uint64_t)1)//高效减去m的倍数m<=x
     {
-        while(com(m,M)==1&&com(m,x)==1)//m<M&&m<x
+        while(com(m,M)==(uint64_t)1&&com(m,x)==(uint64_t)1)//m<M&&m<x
         {
             m=m<<1;
         }
-        while(com(m,x)==2&&com(m,y)==2)//m>x&&m>y
+        while(com(m,x)==(uint64_t)2&&com(m,y)==(uint64_t)2)//m>x&&m>y
         {
             m=m>>1;
         }
@@ -45,11 +45,11 @@ uint64_t mod(uint64_t x,uint64_t y){
 uint64_t plus(uint64_t x,uint64_t y,uint64_t m){
     x=mod(x,m);
     y=mod(y,m);
-    if(com(x,MAX-y)==2&&x!=0&&y!=0)
+    if(com(x,MAX-y)==(uint64_t)2&&x!=(uint64_t)0&&y!=(uint64_t)0)
     {
         //printf("sss\n");
 
-        return plus(plus(mod(MAX,m),mod(1,m),m),x+y,m);
+        return plus(plus(mod(MAX,m),mod((uint64_t)1,m),m),x+y,m);
     }
     return x+y;
 }
@@ -62,13 +62,13 @@ uint64_t multimod(uint64_t a, uint64_t b, uint64_t m) {
   while(b!=0)
   {
     
-    if(b&1!=0)
+    if(b&(uint64_t)1!=0)
     {
         ans=mod(plus(ans,temp,m),m);
         //printf("%llu\n",ans);
     }
     temp=mod(plus(temp,temp,m),m);
-    b=b>>1;
+    b=b>>(uint64_t)1;
   }
 
   return ans;
