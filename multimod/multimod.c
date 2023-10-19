@@ -62,7 +62,7 @@ uint64_t multimod(uint64_t a, uint64_t b, uint64_t m) {
   while(b!=0)
   {
     
-    if(b&(uint64_t)1!=0)
+    if(((b)&(1))!=0)
     {
         ans=mod(plus(ans,temp,m),m);
         //printf("%llu\n",ans);
