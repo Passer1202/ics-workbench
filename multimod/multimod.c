@@ -26,7 +26,7 @@ return (uint64_t)0;
 
 uint64_t mod(uint64_t x,uint64_t y){
     uint64_t m=y;
-    while(com(m,x)==(uint64_t)0||com(m,x)==(uint64_t)1)//高效减去m的倍数m<=x
+    while(com(y,x)==(uint64_t)0||com(y,x)==(uint64_t)1)//高效减去m的倍数m<=x
     {
         while(com(m,M)==(uint64_t)1&&com(m,x)==(uint64_t)1)//m<M&&m<x
         {
