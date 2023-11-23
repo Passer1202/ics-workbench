@@ -13,7 +13,7 @@ int64_t asm_add(int64_t a, int64_t b){
         "movq %2,%0;"
         :"=r"(c)
         :"r"(a),"r"(b)
-    )
+    );
     return c;
 };
 // 返回无符号 64 位整数 x 二进制表示中 1 的数量
