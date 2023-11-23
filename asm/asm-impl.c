@@ -1,15 +1,8 @@
 #include "asm.h"
 #include <string.h>
 // 返回有符号 64 位整数 a + b 的数值
-inline int64_t asm_add(int64_t a, int64_t b) {
-  /*
-  int c;
-  asm volatile(
-    "addq %1,%2;"
-    :"=r"(c)
-    :"r"(a),"r"(b)
-  );
-  */
+int64_t asm_add(int64_t a, int64_t b) {
+  
   return a+b;
 }
 // 返回无符号 64 位整数 x 二进制表示中 1 的数量
