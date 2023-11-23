@@ -33,8 +33,8 @@ inline int asm_popcnt(uint64_t x){
         "cmpl $63,%3;"
         "jle .L1;"
         "movl %2,%0;"
-        :"=r"(out) 
-        :"r"(x),"r"(ans),"r"(i),"r"(j)
+        :"=a"(out) 
+        :"b"(x),"c"(ans),"d"(i),"S"(j)
     );
     return out;
 }
