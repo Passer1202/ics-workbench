@@ -6,8 +6,8 @@
 #define asm_jmp_buf jmp_buf
 
 
+
 int64_t asm_add(int64_t a, int64_t b);
-//int64_t asm_add(int64_t a, int64_t b) ;
 // 返回无符号 64 位整数 x 二进制表示中 1 的数量
 int asm_popcnt(uint64_t x);
 // C 标准库中的 memcpy，用于复制两段不相交的内存
