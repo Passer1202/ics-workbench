@@ -4,7 +4,7 @@
 inline int64_t asm_add(int64_t a, int64_t b) 
 { 
   int64_t c;
-  asm (
+  asm volatile(
     "addq %1,%2;"
     "movq %2,%0;"
     :"=r"(c)
@@ -15,22 +15,8 @@ inline int64_t asm_add(int64_t a, int64_t b)
 }
 
 inline int asm_popcnt(uint64_t x){
-    int out;//0
+    int out=0;//0
     //x       1
-    asm (
-        "movl $0,%%eax;"
-        ".L1:;"
-        "cmpq $0,%%rcx;"
-        "jz .L3;"
-        "shrq $1,%%rcx;"
-        "jnc .L2;"
-        "incl %%eax;"
-        ".L2:;"
-        "jmp .L1;"
-        ".L3:;"
-        :"=a"(out) 
-        :"c"(x)
-    );
     return out;
 }
 
