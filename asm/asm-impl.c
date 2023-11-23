@@ -1,6 +1,6 @@
 #include "asm.h"
 #include <string.h>
-/*
+
 int64_t asm_add(int64_t a, int64_t b) 
 {
   return a+b;
@@ -26,4 +26,3 @@ int asm_setjmp(asm_jmp_buf env) {
 void asm_longjmp(asm_jmp_buf env, int val) {
   longjmp(env, val);
 }
-*/
