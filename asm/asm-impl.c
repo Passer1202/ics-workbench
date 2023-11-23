@@ -17,7 +17,7 @@ inline int64_t asm_add(int64_t a, int64_t b)
 inline int asm_popcnt(uint64_t x){
     int out;//0
     //x       1
-    int ans=0;//2
+    int ans;//2
     asm volatile(
         ".L1:"
         "movl $0,%2;"
