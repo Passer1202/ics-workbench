@@ -1,7 +1,7 @@
 #include "asm.h"
 #include <string.h>
 // 返回有符号 64 位整数 a + b 的数值
-int64_t asm_add(int64_t a, int64_t b) {
+inline int64_t asm_add(int64_t a, int64_t b) {
   /*
   int c;
   asm volatile(
