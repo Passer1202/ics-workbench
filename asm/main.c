@@ -9,6 +9,7 @@ int main() {
     assert(asm_add(1234, 5678) == 6912);
     //printf("%ld",asm_add(1234, 5678));
     // TODO: add more tests here.
+    assert(asm_popcnt(0x0123456789abcdefULL)==32);
     asm_longjmp(buf, 123);
   } else {
    assert(r == 123);
