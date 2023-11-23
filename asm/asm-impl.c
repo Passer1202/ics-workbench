@@ -1,10 +1,11 @@
 #include "asm.h"
 #include <string.h>
 // 返回有符号 64 位整数 a + b 的数值
-int64_t asm_add(int64_t a, int64_t b) {
-  
-  return a+b;
-}
+int64_t asm_add(int64_t a, int64_t b) ;
+//{
+
+ // return a+b;
+//}
 // 返回无符号 64 位整数 x 二进制表示中 1 的数量
 int asm_popcnt(uint64_t x) {
   int s = 0;
