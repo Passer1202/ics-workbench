@@ -1,7 +1,7 @@
 #include "asm.h"
 #include <string.h>
 
-int64_t asm_add(int64_t a, int64_t b) 
+inline int64_t asm_add(int64_t a, int64_t b) 
 { 
   int64_t c;
   asm volatile(
@@ -14,12 +14,29 @@ int64_t asm_add(int64_t a, int64_t b)
   return c;
 }
 
-int asm_popcnt(uint64_t x) {
-  int s = 0;
-  for (int i = 0; i < 64; i++) {
-    if ((x >> i) & 1) s++;
-  }
-  return s;
+inline int asm_popcnt(uint64_t x){
+    int out;//0
+    //x       1
+    int ans=0;//2
+    int i=0;//3
+    uint64_t j=0;//4
+    asm volatile(
+        ".L1:"
+        "movq %1,%4;"
+        "andq $0x1,%4;"
+        "cmpq $1,%4;"
+        "jl .L2;"
+        "addl $1,%2;"
+        ".L2:"
+        "shrq $1,%1;"
+        "addl $1,%3;"
+        "cmpl $63,%3;"
+        "jle .L1;"
+        "movl %2,%0;"
+        :"=r"(out) 
+        :"r"(x),"r"(ans),"r"(i),"r"(j)
+    );
+    return out;
 }
 
 void *asm_memcpy(void *dest, const void *src, size_t n) {
