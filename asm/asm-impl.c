@@ -15,27 +15,28 @@ inline int64_t asm_add(int64_t a, int64_t b)
 }
 
 inline int asm_popcnt(uint64_t x){
-    int ans=0;//0
+    int out;//0
     //x       1
-    
+    int ans=0;//2
+    int i=0;//3
+    uint64_t j=0;//4
     asm volatile(
-
-        "movl $0,%%eax;"
-        ".L1:;"
-        "cmpq $0,%%rcx;"
-        "jz .L3;"
-        "shrq $1,%%rcx;"
-        "jnc .L2;"
-        "incl %%eax;"
-        ".L2:;"
-        "jmp .L1;"
-        ".L3:"
-        
-        :"=a"(ans) 
-        :"c"(x)
+        ".L1:"
+        "movq %1,%4;"
+        "andq $0x1,%4;"
+        "cmpq $1,%4;"
+        "jl .L2;"
+        "addl $1,%2;"
+        ".L2:"
+        "shrq $1,%1;"
+        "addl $1,%3;"
+        "cmpl $63,%3;"
+        "jle .L1;"
+        "movl %2,%0;"
+        :"=r"(out) 
+        :"r"(x),"r"(ans),"r"(i),"r"(j)
     );
-    
-    return ans;
+    return out;
 }
 
 inline void *asm_memcpy(void *dest, const void *src, size_t n) {
