@@ -92,16 +92,15 @@ inline void asm_longjmp(asm_jmp_buf env, int val) {
     "movq %%rsi,%%rdx;"//val到rdx
     "test %%rdx,%%rdx;"//and
     "je .L4;"
-    "incl %%rdx;"
+    "incq %%rdx;"
     ".L4:;"
     "movq (%%rax),%%rbx;"
-    "movq 8(%%rax),%%rsp;"
+    "movq 8(%%rax),%%esp;"
     "movq 16(%%rax),%%rbp;"
     "movq 24(%%rax),%%r12;"
     "movq 32(%%rax),%%r13;"
     "movq 40(%%rax),%%r14;"
     "movq 48(%%rax),%%r15;"
-    "movq 56(%%rax),%%rip;"
     :
     :"a"(env),"d"(val)
   );
