@@ -71,6 +71,7 @@ inline int asm_setjmp(asm_jmp_buf env) {
     "movq %%rbx,(%%rax);"
     "movq %%rsp,8(%%rax);"
     "movq %%rbp,16(%%rax);"
+    "movq %%r12,24(%%rax);"
     :"=a"(value)
     :"d"(env)
   );
