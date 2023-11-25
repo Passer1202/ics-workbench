@@ -40,6 +40,24 @@ inline int asm_popcnt(uint64_t x){
 }
 inline void *asm_memcpy(void *dest, const void *src, size_t n) {
   //return memcpy(dest, src, n);
+  //for(int i=0;i<n;i++){
+  //  *dest+n=*src+n; 
+  //}
+  //i,d,src,n(64)
+  size_t i=0;
+  void* d=dest;
+  asm volatile(
+    "movq $0,%0;"
+    ".L1:;"
+    "movb (%2),%%al;"
+    "movb %%al,(%1);"
+    "incl %2;"
+    "incl %1;"
+    "incl %0;"
+    "cmpq %3,%0;"
+    "jb .L1:;"
+    :"b"(i),"c"(d),"d"(src),"S"(n)
+  );
   return dest;
 }
 
