@@ -53,9 +53,9 @@ inline void *asm_memcpy(void *dest, const void *src, size_t n) {
     "movb %%al,(%1);"
     "incq %2;"
     "incq %1;"
-    "incl %0;"
+    "incq %0;"
     "cmpq %3,%0;"
-    "jb .L1:;"
+    "jb .L1;"
     :"=b"(i)
     :"c"(d),"d"(src),"S"(n)
   );
