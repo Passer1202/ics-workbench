@@ -13,7 +13,7 @@ typedef struct
  unsigned long long __r14;
  unsigned long long __r15;
  unsigned long long __rip;
-}jmp_buf;
+}jmp_buf[1];
 
 
 #define asm_jmp_buf jmp_buf
