@@ -3,7 +3,18 @@
 
 // TODO: replace with your definition
 //#include <setjmp.h> // remove this
-typedef long long unsigned jmp_buf[8];
+typedef struct
+{
+ unsigned long long __rbx; // 通用数据寄存器之一
+ unsigned long long __rsp; // 栈指针寄存器
+ unsigned long long __rbp; // 基址指针寄存器
+ unsigned long long __r12;
+ unsigned long long __r13;
+ unsigned long long __r14;
+ unsigned long long __r15;
+ unsigned long long __rip;
+}jmp_buf;
+
 
 #define asm_jmp_buf jmp_buf
 
