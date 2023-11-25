@@ -3,9 +3,10 @@
 
 // TODO: replace with your definition
 #include <setjmp.h> // remove this
+//typedef struct __jum_buf_tag jmp_buf[16];
 #define asm_jmp_buf jmp_buf
 
-
+//struct int[16];
 int64_t asm_add(int64_t a, int64_t b);
 // 返回无符号 64 位整数 x 二进制表示中 1 的数量
 int asm_popcnt(uint64_t x);
