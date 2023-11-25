@@ -2,8 +2,9 @@
 #include <stddef.h>
 
 // TODO: replace with your definition
-#include <setjmp.h> // remove this
-//typedef struct __jum_buf_tag jmp_buf[16];
+//#include <setjmp.h> // remove this
+typedef unsigned long long jmp_buf[8];
+
 #define asm_jmp_buf jmp_buf
 
 //struct int[16];
