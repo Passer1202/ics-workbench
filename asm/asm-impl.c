@@ -67,7 +67,7 @@ inline int asm_setjmp(asm_jmp_buf env) {
   //return setjmp(env);
   size_t value;
   asm volatile(
-    "movq %%rdx,%%rax;"//将env传到rax里；
+    "movq %%rdi,%%rax;"//将env传到rax里；
     "movq %%rbx,(%%rax);"
     "movq %%rsp,8(%%rax);"
     "movq %%rbp,16(%%rax);"
@@ -79,13 +79,32 @@ inline int asm_setjmp(asm_jmp_buf env) {
     "movq %%rbx,56(%%rax);"
     "xorq %%rax,%%rax;"
     :"=a"(value)
-    :"d"(env)
+    :"D"(env)
   );
-  return 0;
+
+  return value;
 }
 
 inline void asm_longjmp(asm_jmp_buf env, int val) {
   //longjmp(env, val);
+  asm volatile(
+    "movq %%rdi,%%rax;"//env到rax
+    "movq %%rsi,%%rdx;"//val到rdx
+    "test %%rdx,%%rdx;"//and
+    "je .L4;"
+    "incl %%rdx;"
+    ".L4:;"
+    "movq (%%rax),%%rbx;"
+    "movq 8(%%rax),%%rsp;"
+    "movq 16(%%rax),%%rbp;"
+    "movq 24(%%rax),%%r12;"
+    "movq 32(%%rax),%%r13;"
+    "movq 40(%%rax),%%r14;"
+    "movq 48(%%rax),%%r15;"
+    "movq 56(%%rax),%%rip;"
+    :
+    :"a"(env),"d"(val)
+  );
   
 }
   
