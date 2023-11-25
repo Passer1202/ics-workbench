@@ -68,15 +68,7 @@ inline int asm_setjmp(asm_jmp_buf env) {
   size_t value;
   asm volatile(
     "movq %%rdx,%%rax;"//将env传到rax里；
-    "movq %%rbx,(%%rax);"
-    "movq %%rsp,8(%%rax);"
-    "movq %%rbp,16(%%rax);"
-    "movq %%r12,24(%%rax);"
-    "movq %%r13,32(%%rax);"
-    "movq %%r14,40(%%rax);"
-    "movq %%r15,48(%%rax);"
-    "movq %%rip,56(%%rax);"
-    "xorq %%rax,%%rax;"
+    
     :"=a"(value)
     :"d"(env)
   );
