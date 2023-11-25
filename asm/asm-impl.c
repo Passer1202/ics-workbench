@@ -87,24 +87,24 @@ inline int asm_setjmp(asm_jmp_buf env) {
 inline void asm_longjmp(asm_jmp_buf env, int val) {
   //longjmp(env, val);
   asm volatile(
-    "movq %%rdi,%%rax;"//env到rax
-    "movq %%rsi,%%rdx;"//val到rdx
-    "test %%rdx,%%rdx;"//and
+    "movq %%rdi,%%rdx;"//env到rax
+    "movq %%rsi,%%rax;"//val到rdx
+    "test %%rax,%%rax;"//and
     "je .L4;"
-    "incq %%rdx;"
+    "incq %%rax;"
     ".L4:;"
-    "movq (%%rax),%%rbx;"
-    "movq 8(%%rax),%%rsp;"
-    "movq 16(%%rax),%%rbp;"
-    "movq 24(%%rax),%%r12;"
-    "movq 32(%%rax),%%r13;"
-    "movq 40(%%rax),%%r14;"
-    "movq 48(%%rax),%%r15;"
-    "movq 56(%%rax),%%rcx;"//用了个rcx
-    "movq %%rdx,%%rax;"
-    "jmp *%%rcx;"
+    "movq (%%rdx),%%rbx;"
+    "movq 8(%%rdx),%%rsp;"
+    "movq 16(%%rdx),%%rbp;"
+    "movq 24(%%rdx),%%r12;"
+    "movq 32(%%rdx),%%r13;"
+    "movq 40(%%rdx),%%r14;"
+    "movq 48(%%rdx),%%r15;"
+    "movq 56(%%rdx),%%rcx;"//用了个rcx
+    "movq %%rcx,8(%%rsp);"
+    "retn;"
     :
-    :"a"(env),"d"(val)
+    :"a"(val),"d"(env)
   );
   
 }
