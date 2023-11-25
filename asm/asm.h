@@ -3,7 +3,7 @@
 
 // TODO: replace with your definition
 //#include <setjmp.h> // remove this
-typedef unsigned long long jmp_buf[8];
+typedef long long unsigned jmp_buf[8];
 
 #define asm_jmp_buf jmp_buf
 
