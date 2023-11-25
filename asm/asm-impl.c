@@ -101,6 +101,7 @@ inline void asm_longjmp(asm_jmp_buf env, int val) {
     "movq 32(%%rax),%%r13;"
     "movq 40(%%rax),%%r14;"
     "movq 48(%%rax),%%r15;"
+    "movq 56(%%rax),%%rip;"
     :
     :"a"(env),"d"(val)
   );
