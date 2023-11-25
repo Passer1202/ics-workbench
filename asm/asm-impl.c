@@ -102,7 +102,7 @@ inline void asm_longjmp(asm_jmp_buf env, int val) {
     "movq 48(%%rdx),%%r15;"
     "movq 56(%%rdx),%%rcx;"//用了个rcx
     "movq %%rcx,8(%%rsp);"
-    "retn;"
+    "ret;"
     :
     :"a"(val),"d"(env)
   );
