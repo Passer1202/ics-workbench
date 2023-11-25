@@ -5,6 +5,9 @@
 int main() {
   asm_jmp_buf buf;
   int r = asm_setjmp(buf);
+
+  printf("%d",r);
+  
   assert(asm_popcnt(0x0123456789abcdefULL)==32);
   printf("%d",asm_popcnt(0x0123456789abcdefULL));
   if (r == 0) {
@@ -17,4 +20,5 @@ int main() {
    assert(r == 123);
    printf("PASSED.\n");
   }
+  
 }
