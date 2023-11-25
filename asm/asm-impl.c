@@ -82,7 +82,7 @@ inline int asm_setjmp(asm_jmp_buf env) {
     :"D"(env)
   );
 
-  return value;
+  return 1;
 }
 
 inline void asm_longjmp(asm_jmp_buf env, int val) {
