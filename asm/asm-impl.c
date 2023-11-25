@@ -44,7 +44,7 @@ inline void *asm_memcpy(void *dest, const void *src, size_t n) {
   //  *dest+n=*src+n; 
   //}
   //i,d,src,n(64)
-  size_t i=0;
+  size_t i;
   void* d=dest;
   asm volatile(
     "movq $0,%0;"
@@ -56,7 +56,8 @@ inline void *asm_memcpy(void *dest, const void *src, size_t n) {
     "incl %0;"
     "cmpq %3,%0;"
     "jb .L1:;"
-    :"b"(i),"c"(d),"d"(src),"S"(n)
+    :"=b"(i)
+    :"c"(d),"d"(src),"S"(n)
   );
   return dest;
 }
