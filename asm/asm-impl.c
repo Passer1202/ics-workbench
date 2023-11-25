@@ -75,7 +75,7 @@ inline int asm_setjmp(asm_jmp_buf env) {
     "movq %%r13,32(%%rax);"
     "movq %%r14,40(%%rax);"
     "movq %%r15,48(%%rax);"
-    "leaq 8(%%rsp),%%rbx;"//rbp/rsp;
+    "leaq (%%rip),%%rbx;"//rbp/rsp;
     "movq %%rbx,56(%%rax);"
     "xorq %%rax,%%rax;"
     :"=a"(value)
@@ -90,7 +90,7 @@ inline void asm_longjmp(asm_jmp_buf env, int val) {
     "movq %%rdi,%%rdx;"//env到rax
     "movq %%rsi,%%rax;"//val到rdx
     "test %%rax,%%rax;"//and
-    "je .L4;"
+    "jne .L4;"
     "incq %%rax;"
     ".L4:;"
     "movq (%%rdx),%%rbx;"
@@ -101,10 +101,9 @@ inline void asm_longjmp(asm_jmp_buf env, int val) {
     "movq 40(%%rdx),%%r14;"
     "movq 48(%%rdx),%%r15;"
     "movq 56(%%rdx),%%rcx;"//用了个rcx
-    "movq %%rcx,8(%%rsp);"
-    "ret;"
+    "jmp *%%rcx;"
     :
-    :"a"(val),"d"(env)
+    :
   );
   
 }
