@@ -48,14 +48,14 @@ inline void *asm_memcpy(void *dest, const void *src, size_t n) {
   void* d=dest;
   asm volatile(
     "movq $0,%0;"
-    ".L1:;"
+    ".L3:;"
     "movb (%2),%%al;"
     "movb %%al,(%1);"
     "incq %2;"
     "incq %1;"
     "incq %0;"
     "cmpq %3,%0;"
-    "jb .L1;"
+    "jb .L3;"
     :"=b"(i)
     :"c"(d),"d"(src),"S"(n)
   );
