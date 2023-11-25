@@ -63,7 +63,7 @@ inline void *asm_memcpy(void *dest, const void *src, size_t n) {
 }
 
 
-inline int asm_setjmp(asm_jmp_buf env) {
+ int asm_setjmp(asm_jmp_buf env) {
   //return setjmp(env);
   size_t value;
   asm volatile(
@@ -85,7 +85,7 @@ inline int asm_setjmp(asm_jmp_buf env) {
   return 1;
 }
 
-inline void asm_longjmp(asm_jmp_buf env, int val) {
+ void asm_longjmp(asm_jmp_buf env, int val) {
   //longjmp(env, val);
   asm volatile(
     "movq %%rdi,%%rax;"//env到rax
