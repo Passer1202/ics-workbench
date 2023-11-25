@@ -17,7 +17,7 @@ typedef  struct
 }jmp_buf[1];
 */
 
-typedef unsigned long long myjmp_buf[8];
+typedef unsigned long long myjmp_buf[16];
 
 #define asm_jmp_buf myjmp_buf
 
