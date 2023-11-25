@@ -76,7 +76,7 @@ inline int asm_setjmp(asm_jmp_buf env) {
     "movq %%r14,40(%%rax);"
     "movq %%r15,48(%%rax);"
     "movq %%rip,56(%%rax);"
-    "xor %%rax,%%rax;"
+    "xorq %%rax,%%rax;"
     :"=a"(value)
     :"d"(env)
   );
