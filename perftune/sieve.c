@@ -12,14 +12,14 @@
   assert(n + 1 < N);
   int *p = primes;
   for(int i=2;i<=n;i++){
-    if(!is_not_prime[i])*p++ = primes;
+    if(!is_not_prime[i])*p++ = i;
     for(int j=0;j<=n;j++){
       int k=primes[j];
       int z=k*j;
       if(k==0||z>n)break;
       is_not_prime[z]=true;
       if(i%k==0)break;
-      
+
     }
   }
   *p = 0;
