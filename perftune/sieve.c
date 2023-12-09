@@ -14,8 +14,9 @@
   for(int i=2;i<=n;i++){
     if(!is_not_prime[i])*p++ = i;
     for(int j=0;j<=n;j++){
-      printf("%d\n",k);
+      
       int k=primes[j];
+      printf("%d\n",k);
       int z=k*j;
       if(k==0||z>n)break;
       is_not_prime[z]=true;
