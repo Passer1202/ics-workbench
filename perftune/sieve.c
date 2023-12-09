@@ -8,7 +8,7 @@
  bool is_prime[N];
  int  primes[N]; 
 
-int *sieve(int n) {
+inline int *sieve(int n) {
   assert(n + 1 < N);
   for (int i = 0; i <= n; i++)
     is_prime[i] = true;
