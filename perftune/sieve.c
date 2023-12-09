@@ -21,10 +21,15 @@
   }
 
   int *p = primes;
-  for (int i = 2; i <= n; i++)
-    if (is_prime[i]) {
-      *p++ = i;
+  if(n>2)*p++ = 2;
+  int k=0;
+  for (int i = 1; 1; i++){
+    k=(i<<1)+1;
+    if(k>n)break;
+    if (is_prime[k]) {
+      *p++ = k;
     }
+  }
   *p = 0;
   return primes;
 }
