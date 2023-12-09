@@ -5,29 +5,21 @@
 
 #define N 10000000
 
- static bool is_prime[N];
+ static bool is_not_prime[N];
  static int  primes[N]; 
 
  int *sieve(int n) {
   assert(n + 1 < N);
-  for (int i = 0; i <= n; i++)
-    is_prime[i] = true;
-
-  for (int i = 2; i*i <= n; i++) {
-    if(!is_prime[i])continue;
-    for (int j = i * i; j <= n; j += i) {
-      is_prime[j] = false;
-    }
-  }
-
   int *p = primes;
-  if(n>2)*p++ = 2;
-  int k=0;
-  for (int i = 1; 1; i++){
-    k=(i<<1)+1;
-    if(k>n)break;
-    if (is_prime[k]) {
-      *p++ = k;
+  for(int i=2;i<=n;i++){
+    if(!is_not_prime[i])*p++ = primes;
+    for(int j=0;j<=n;j++){
+      int k=primes[j];
+      int z=k*j;
+      if(k==0||z>n)break;
+      is_not_prime[z]=true;
+      if(i%k==0)break;
+      
     }
   }
   *p = 0;
