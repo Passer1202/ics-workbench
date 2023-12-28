@@ -16,9 +16,9 @@ void cycle_increase(int n) { cycle_cnt += n; }
 
 #define MAX_group 100000//最多组数
 
-uint32_t wnum=0;//路数
+int wnum=0;//路数
 
-uint32_t gnum=0;//组数
+int gnum=0;//组数
 
 typedef struct
 {
@@ -44,9 +44,9 @@ typedef struct
 
 cache myC;
 
-uint32_t tlen;
+int tlen;
 
-uint32_t glen;//组号长度
+int glen;//组号长度
 
 //struct{
 //  bool valid[16];//是否有效
@@ -201,13 +201,13 @@ void init_cache(int total_size_width, int associativity_width) {
   //assert((exp2(associativity_width))<MAX_way);
   //assert((uint64_t)(1<<total_size_width)<(uint64_t)(MAX_group<<6)*(uint64_t)(1<<associativity_width));
   
-  wnum=exp2(associativity_width);//路数
+  wnum=(int)exp2(associativity_width);//路数
 
-  glen=total_size_width-BLOCK_WIDTH-associativity_width;
+  glen=(int)total_size_width-BLOCK_WIDTH-associativity_width;
 
-  gnum=exp2(glen);//（组数=总空间/路数/64B）//先不考虑不整除；
+  gnum=(int)exp2(glen);//（组数=总空间/路数/64B）//先不考虑不整除；
 
-  tlen=32-glen-BLOCK_SIZE;//tag长度
+  tlen=(int)32-glen-BLOCK_SIZE;//tag长度
 
   //printf("%d\n",glen);
 
