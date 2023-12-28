@@ -146,7 +146,8 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
       mem_read(addr>>6,myC.groups[g].ways[i].data);
       myC.groups[g].ways[i].tag=(addr>>6)/gnum;
       myC.groups[g].ways[i].dirty=true;
-//assert(0);
+
+assert(0);
       uint32_t rnum=(data&wmask);
       uint32_t  j=addr%BLOCK_SIZE;
           //先当是按照单元来的
