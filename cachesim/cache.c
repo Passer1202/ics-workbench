@@ -186,10 +186,11 @@ void init_cache(int total_size_width, int associativity_width) {
   //assert((uint64_t)(1<<total_size_width)<(uint64_t)(MAX_group<<6)*(uint64_t)(1<<associativity_width));
   
   wnum=exp2(associativity_width);//路数
-  gnum=((uint64_t)(1<<(total_size_width-6-associativity_width)));//（组数=总空间/路数/64B）//先不考虑不整除；
+  gnum=((uint64_t)(1<<(total_size_width-BLOCK_WIDTH-associativity_width)));//（组数=总空间/路数/64B）//先不考虑不整除；
+
 
   tlen=32-total_size_width+associativity_width;
-  //printf("%d\n",total_size_width);
+  printf("%d\n",gnum);
 
   //srand(time(NULL));
   myC.groups=(group*)malloc(gnum*sizeof(group));
