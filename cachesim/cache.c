@@ -163,7 +163,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
       myC.groups[g].ways[i].tag=tag;
       myC.groups[g].ways[i].dirty=true;
 
-//assert(0);
+assert(0);
       //uint32_t rnum=(data&wmask);
       uint32_t  j=addr&mask_with_len(BLOCK_WIDTH);
           //先当是按照单元来的
@@ -173,7 +173,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
          
     }
   }
-  assert(0);
+  //assert(0);
   uint32_t lucker=rand()%wnum;
   if(myC.groups[g].ways[lucker].dirty)mem_write((myC.groups[g].ways[lucker].tag<<glen)+g,myC.groups[g].ways[lucker].data);
   mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[lucker].data);
