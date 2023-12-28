@@ -81,6 +81,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   //找到了
 	for(int i=0;i<wnum;i++){
     printf("%d",cache[g].valid[i]);
+    assert(0);
     		if(cache[g].valid[i]&&(cache[g].tag[i]==((addr>>6)/wnum)))
         { 
           //assert(0);
