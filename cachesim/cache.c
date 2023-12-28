@@ -41,23 +41,24 @@ uint32_t cache_read(uintptr_t addr) {
 
   uint32_t g=(addr>>6)%gnum;
 
-  printf("%d\n",g);
+  //printf("%d\n",g);
   //命中
   //assert(0);
-  for(int i=0;i<wnum;i++){
-    if(cache[g].valid[i]&&(cache[g].tag[i]==((addr>>6))))
+  for(uint32_t i=0;i<wnum;i++){
+    if(cache[g].valid[i]&&(cache[g].tag[i]==((addr>>6)/wnum)))
     {
       assert(0);
       return cache[g].data[i][addr%BLOCK_SIZE];
     }
   }
   //缺失
-  for(int i=0;i<wnum;i++){
+  for(uint32_t i=0;i<wnum;i++){
     if(!cache[g].valid[i]){
       cache[g].valid[i]=true;
       mem_read(addr>>6,cache[g].data[i]);
-      cache[g].tag[i]=(addr>>6);
+      cache[g].tag[i]=(addr>>6)/wnum;
       return cache[g].data[i][addr%BLOCK_SIZE];
+      assert(0);
     }
   }
   //还满了
@@ -146,7 +147,7 @@ void init_cache(int total_size_width, int associativity_width) {
   wnum=exp2(associativity_width);//路数
   gnum=((uint64_t)(1<<(total_size_width-6))/wnum);//（组数=总空间/路数/64B）//先不考虑不整除；
 
-  printf("%d\n",total_size_width);
+  //printf("%d\n",total_size_width);
 
   //srand(time(NULL));
 
