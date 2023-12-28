@@ -129,17 +129,11 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
         { 
           //assert(0);
           myC.groups[g].ways[i].dirty=true;
-          uint32_t rnum=(data&wmask);
+          //uint32_t rnum=(data&wmask);
           int  j=addr%BLOCK_SIZE;
           //先当是按照单元来的
-          while(rnum!=0){
-          myC.groups[g].ways[i].data[j]&=(~wmask);
-          myC.groups[g].ways[i].data[j]+=rnum;
-          rnum>>=8;
-          wmask>>=8;
-          j++;
-          }
-
+          uint32_t* p=(uint32_t*)&myC.groups[g].ways[i].data[j];
+          *p=(*p&~wmask)|(data&wmask);
           return;
         }
   }
@@ -152,17 +146,10 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
       myC.groups[g].ways[i].dirty=true;
 
       uint32_t rnum=(data&wmask);
-      int j=addr%BLOCK_SIZE;
+      int  j=addr%BLOCK_SIZE;
           //先当是按照单元来的
-          while(rnum!=0){
-          myC.groups[g].ways[i].data[j]&=(~wmask);
-          myC.groups[g].ways[i].data[j]+=rnum;
-          rnum>>=8;
-          wmask>>=8;
-          j++;
-          
-          }
-
+          uint32_t* p=(uint32_t*)&myC.groups[g].ways[i].data[j];
+          *p=(*p&~wmask)|(data&wmask);
          return;
     }
   }
@@ -171,16 +158,10 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   mem_read(addr>>6,myC.groups[g].ways[lucker].data);
   myC.groups[g].ways[lucker].tag=(addr>>6)/gnum;
   uint32_t rnum=(data&wmask);
-  int z=addr%BLOCK_SIZE;
+  int  j=addr%BLOCK_SIZE;
           //先当是按照单元来的
-          while(rnum!=0){
-          
-          myC.groups[g].ways[lucker].data[z]&=(~wmask);
-          myC.groups[g].ways[lucker].data[z]+=rnum;
-          rnum>>=8;
-          wmask>>=8;
-          z++;
-          }
+          uint32_t* p=(uint32_t*)&myC.groups[g].ways[i].data[j];
+          *p=(*p&~wmask)|(data&wmask);
   //assert(0);
 
   
