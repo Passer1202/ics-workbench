@@ -148,9 +148,9 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
           //assert(0);
           myC.groups[g].ways[i].dirty=true;
           //uint32_t rnum=(data&wmask);
-          uint32_t  j=addr&mask_with_len(BLOCK_WIDTH);
+          //uint32_t  j=addr&mask_with_len(BLOCK_WIDTH);
           //先当是按照单元来的
-          uint32_t* p=(uint32_t*)&myC.groups[g].ways[i].data[j];
+          uint32_t* p=(uint32_t*)&myC.groups[g].ways[i].data[offset];
           *p=(*p&~wmask)|(data&wmask);
           return;
         }
@@ -163,11 +163,11 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
       myC.groups[g].ways[i].tag=tag;
       myC.groups[g].ways[i].dirty=true;
 
-assert(0);
+//assert(0);
       //uint32_t rnum=(data&wmask);
-      uint32_t  j=addr&mask_with_len(BLOCK_WIDTH);
+      //uint32_t  j=addr&mask_with_len(BLOCK_WIDTH);
           //先当是按照单元来的
-          uint32_t* p=(uint32_t*)&myC.groups[g].ways[i].data[j];
+          uint32_t* p=(uint32_t*)&myC.groups[g].ways[i].data[offset];
           *p=(*p&~wmask)|(data&wmask);
          return;
          
@@ -209,9 +209,9 @@ void init_cache(int total_size_width, int associativity_width) {
   //srand(time(NULL));
   myC.groups=(group*)malloc(gnum*sizeof(group));
 
-  for(int i=0;i<gnum;i++){
+  for(uint32_t i=0;i<gnum;i++){
     myC.groups[i].ways=(line*)malloc(wnum*sizeof(line));
-    for(int j=0;j<wnum;j++){
+    for(uint32_t j=0;j<wnum;j++){
       myC.groups[i].ways[j].valid=0;
       myC.groups[i].ways[j].dirty=0;
     }
