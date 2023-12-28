@@ -43,7 +43,7 @@ uint32_t cache_read(uintptr_t addr) {
 
   //命中
   for(int i=0;i<wnum;i++){
-    if(cache[g].valid[i]&&(cache[g].tag[i]==((addr>>8)/wnum)))
+    if(cache[g].valid[i]&&(cache[g].tag[i]==((addr>>6))))
     assert(0);
       return cache[g].data[i][addr%BLOCK_SIZE];
   }
@@ -52,14 +52,14 @@ uint32_t cache_read(uintptr_t addr) {
     if(!cache[g].valid[i]){
       cache[g].valid[i]=true;
       mem_read(addr>>6,cache[g].data[i]);
-      cache[g].tag[i]=(addr>>6)/wnum;
+      cache[g].tag[i]=(addr>>6);
       return cache[g].data[i][addr%BLOCK_SIZE];
     }
   }
   //还满了
   int lucker=rand()%wnum;
   mem_read(addr>>6,cache[g].data[lucker]);
-  cache[g].tag[lucker]=(addr>>6)/wnum;
+  cache[g].tag[lucker]=(addr>>6);
   if(cache[g].dirty[lucker])mem_write(cache[g].tag[lucker]*wnum,cache[g].data[lucker]);//写回操作
   return cache[g].data[lucker][addr%BLOCK_SIZE];
 
@@ -72,7 +72,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   uint32_t g=(addr>>6)%gnum;
   //找到了
 	for(int i=0;i<wnum;i++){
-    		if(cache[g].valid[i]&&(cache[g].tag[i]==((addr>>6)/wnum)))
+    		if(cache[g].valid[i]&&(cache[g].tag[i]==((addr>>6))))
         { 
           
           cache[g].dirty[i]=true;
@@ -95,7 +95,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
     if(!cache[g].valid[i]){
       cache[g].valid[i]=true;
       mem_read(addr>>6,cache[g].data[i]);
-      cache[g].tag[i]=(addr>>6)/wnum;
+      cache[g].tag[i]=(addr>>6);
       cache[g].dirty[i]=true;
 
       uint32_t rnum=(data&wmask);
@@ -116,7 +116,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
 
   int lucker=rand()%wnum;
   mem_read(addr>>6,cache[g].data[lucker]);
-  cache[g].tag[lucker]=(addr>>6)/wnum;
+  cache[g].tag[lucker]=(addr>>6);
   uint32_t rnum=(data&wmask);
   int z=0;//addr%BLOCK_SIZE;
           //先当是按照单元来的
