@@ -80,9 +80,9 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   uint32_t g=(addr>>6)%gnum;
   //找到了
 	for(int i=0;i<wnum;i++){
-    		if(cache[g].valid[i]&&(cache[g].tag[i]==((addr>>6)/wnum)))
+    		if(cache[g].valid[i]||(cache[g].tag[i]==((addr>>6)/wnum)))
         { 
-          assert(0);
+          //assert(0);
           cache[g].dirty[i]=true;
           uint32_t rnum=(data&wmask);
           int  j=0;//addr%BLOCK_SIZE;
