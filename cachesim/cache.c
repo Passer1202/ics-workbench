@@ -62,8 +62,8 @@ uint32_t cache_read(uintptr_t addr) {
     //printf("%d\n",cache[g].valid[i]);
     if(!cache[g].valid[i]){
       cache[g].valid[i]=true;
-      mem_read(addr>>6,cache[g].data[i]);
-      cache[g].tag[i]=(addr>>6)/wnum;
+      mem_read(addr/64,cache[g].data[i]);
+      cache[g].tag[i]=(addr/64)/wnum;
       //assert(0);
       uint32_t ans=0;
       uint32_t a=addr%BLOCK_SIZE;
