@@ -45,7 +45,7 @@ uint32_t cache_read(uintptr_t addr) {
   //命中
   //assert(0);
   for(uint32_t i=0;i<wnum;i++){
-    if(cache[g].valid[i]&&(cache[g].tag[i]==((addr>>6)/wnum)))
+    if(cache[g].valid[i]==true||(cache[g].tag[i]==((addr>>6)/wnum)))
     {
       assert(0);
       return cache[g].data[i][addr%BLOCK_SIZE];
@@ -59,7 +59,7 @@ uint32_t cache_read(uintptr_t addr) {
       cache[g].valid[i]=true;
       mem_read(addr>>6,cache[g].data[i]);
       cache[g].tag[i]=(addr>>6)/wnum;
-      assert(0);
+      //assert(0);
       return cache[g].data[i][addr%BLOCK_SIZE];
       //assert(0);
     }
