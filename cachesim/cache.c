@@ -48,7 +48,12 @@ uint32_t cache_read(uintptr_t addr) {
     if(cache[g].valid[i]==true&&(cache[g].tag[i]==((addr>>6)/wnum)))
     {
       //assert(0);
-      return cache[g].data[i][addr%BLOCK_SIZE];
+      uint32_t ans=0;
+      uint32_t a=addr%BLOCK_SIZE;
+      for(int w=3;w>=0;w--){
+        ans=(ans<<8)+cache[g].data[i][a+w];
+      }
+      return ans;
     }
   }
   //缺失
@@ -60,7 +65,12 @@ uint32_t cache_read(uintptr_t addr) {
       mem_read(addr>>6,cache[g].data[i]);
       cache[g].tag[i]=(addr>>6)/wnum;
       //assert(0);
-      return cache[g].data[i][addr%BLOCK_SIZE];
+      uint32_t ans=0;
+      uint32_t a=addr%BLOCK_SIZE;
+      for(int w=3;w>=0;w--){
+        ans=(ans<<8)+cache[g].data[i][a+w];
+      }
+      return ans;
       //assert(0);
     }
   }
@@ -69,7 +79,13 @@ uint32_t cache_read(uintptr_t addr) {
   if(cache[g].dirty[lucker])mem_write(cache[g].tag[lucker]*wnum,cache[g].data[lucker]);//写回操作
   mem_read(addr>>6,cache[g].data[lucker]);
   cache[g].tag[lucker]=(addr>>6)/wnum;
-  return cache[g].data[lucker][addr%BLOCK_SIZE];
+  
+  uint32_t ans=0;
+      uint32_t a=addr%BLOCK_SIZE;
+      for(int w=3;w>=0;w--){
+        ans=(ans<<8)+cache[g].data[i][a+w];
+      }
+      return ans;
 
   //return 0;
 }
@@ -79,7 +95,7 @@ uint32_t cache_read(uintptr_t addr) {
 void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   uint32_t g=(addr>>6)%gnum;
   //找到了
-  assert(0);
+  //assert(0);
 	for(uint32_t i=0;i<wnum;i++){
     //printf("%d",cache[g].valid[i]);
    //assert(0);
