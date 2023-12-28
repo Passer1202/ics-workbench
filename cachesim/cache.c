@@ -61,6 +61,7 @@ cache myC;
 
 uint32_t cache_read(uintptr_t addr) {
   
+  assert(!(addr>>20));
   //assert(exp2(addr)<=MEM_SIZE);
 
   uint32_t g=(addr>>6)%gnum;
@@ -111,7 +112,7 @@ uint32_t cache_read(uintptr_t addr) {
       for(int w=3;w>=0;w--){
         ans=(ans<<8)+myC.groups[g].ways[lucker].data[a+w];
       }
-      assert(0);
+      //assert(0);
       return ans;
 
   //return 0;
