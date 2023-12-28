@@ -100,7 +100,7 @@ uint32_t cache_read(uintptr_t addr) {
   }
   //还满了
   int lucker=rand()%wnum;
-  if(myC.groups[g].ways[lucker].dirty)mem_write(myC.groups[g].ways[lucker].tag*gnum,myC.groups[g].ways[lucker].data);//写回操作
+  if(myC.groups[g].ways[lucker].dirty)mem_write(myC.groups[g].ways[lucker].tag*gnum+g,myC.groups[g].ways[lucker].data);//写回操作
   mem_read(addr>>6,myC.groups[g].ways[lucker].data);
   myC.groups[g].ways[lucker].tag=(addr>>6)/gnum;
 
