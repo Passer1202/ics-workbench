@@ -121,7 +121,9 @@ uint32_t cache_read(uintptr_t addr) {
 
 	return val;
 }
-void display_statistic(void);
+void display_statistic(){
+
+}
 
 // 往cache中`addr`地址所属的块写入数据`data`, 写掩码为`wmask`
 // 例如当`wmask`为`0xff`时, 只写入低8比特
