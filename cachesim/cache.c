@@ -140,8 +140,8 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
 // 例如 init_cache(14, 2) 将初始化一个 16KB，4 路组相联的cache
 // 将所有 valid bit 置为无效即可
 void init_cache(int total_size_width, int associativity_width) {
-  //assert((exp2(associativity_width))<MAX_way);
-  //assert((uint64_t)(1<<total_size_width)<(uint64_t)(MAX_group<<6)*(uint64_t)(1<<associativity_width));
+  assert((exp2(associativity_width))<MAX_way);
+  assert((uint64_t)(1<<total_size_width)<(uint64_t)(MAX_group<<6)*(uint64_t)(1<<associativity_width));
   
   wnum=exp2(associativity_width);//路数
   gnum=((uint64_t)(1<<(total_size_width-6))/wnum);//（组数=总空间/路数/64B）//先不考虑不整除；
