@@ -20,11 +20,36 @@ uint32_t wnum=0;//路数
 
 uint32_t gnum=0;//组数
 
-  bool valid[10000][16];//是否有效
-  bool dirty[10000][16];
-  uint32_t tag[10000][16];//标志位
-  uint8_t data[10000][16][64];//数据
+typedef struct
+{
+  /* data */
+  bool valid;
+  bool dirty;
+  uint32_t tag;
+  uint8_t data[64];
+} line;
 
+typedef struct
+{
+  /* data */
+  line* ways;
+
+}group;
+
+typedef struct 
+{
+  /* data */
+  group* groups;
+}cache;
+
+cache myC;
+
+//struct{
+//  bool valid[16];//是否有效
+ // bool dirty[16];
+ // uint32_t tag[16];//标志位
+ // uint8_t data[16][64];//数据
+//}cache[10000];
 //定义cache
 
 // TODO: implement the following functions
@@ -44,13 +69,13 @@ uint32_t cache_read(uintptr_t addr) {
   //命中
   //assert(0);
   for(uint32_t i=0;i<wnum;i++){
-    if(valid[g][i]==true&&(tag[g][i]==((addr>>6)/wnum)))
+    if(myC.groups[g].ways[i].valid==true&&(myC.groups[g].ways[i].tag==((addr>>6)/wnum)))
     {
       assert(0);
       uint32_t ans=0;
       uint32_t a=addr%BLOCK_SIZE;
       for(int w=3;w>=0;w--){
-        ans=(ans<<8)+data[g][i][a+w];
+        ans=(ans<<8)+myC.groups[g].ways[i].data[a+w];
       }
       return ans;
     }
@@ -59,15 +84,15 @@ uint32_t cache_read(uintptr_t addr) {
   for(uint32_t i=0;i<wnum;i++){
     //assert(0);
     //printf("%d\n",cache[g].valid[i]);
-    if(!valid[g][i]){
-      valid[g][i]=true;
-      mem_read(addr/64,data[g][i]);
-      tag[g][i]=(addr/64)/wnum;
+    if(!myC.groups[g].ways[i].valid){
+      myC.groups[g].ways[i].valid=true;
+      mem_read(addr/64,myC.groups[g].ways[i].data[i]);
+      myC.groups[g].ways[i].tag=(addr>>6)/wnum;
       //assert(0);
       uint32_t ans=0;
       uint32_t a=addr%BLOCK_SIZE;
       for(int w=3;w>=0;w--){
-        ans=(ans<<8)+data[g][i][a+w];
+        ans=(ans<<8)+myC.groups[g].ways[i].data[a+w];
       }
       return ans;
       //assert(0);
@@ -75,14 +100,14 @@ uint32_t cache_read(uintptr_t addr) {
   }
   //还满了
   int lucker=rand()%wnum;
-  if(dirty[g][lucker])mem_write(tag[g][lucker]*wnum,data[g][lucker]);//写回操作
-  mem_read(addr>>6,data[g][lucker]);
-  tag[g][lucker]=(addr>>6)/wnum;
+  if(myC.groups[g].ways[lucker].dirty)mem_write(myC.groups[g].ways[lucker].tag*wnum,myC.groups[g].ways[lucker].data);//写回操作
+  mem_read(addr>>6,myC.groups[g].ways[lucker].data);
+  myC.groups[g].ways[lucker].tag=(addr>>6)/wnum;
 
   uint32_t ans=0;
       uint32_t a=addr%BLOCK_SIZE;
       for(int w=3;w>=0;w--){
-        ans=(ans<<8)+data[g][lucker][a+w];
+        ans=(ans<<8)+myC.groups[g].ways[lucker].data[a+w];
       }
       //assert(0);
       return ans;
@@ -99,16 +124,16 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
 	for(uint32_t i=0;i<wnum;i++){
     //printf("%d",cache[g].valid[i]);
    //assert(0);
-    		if(valid[g][i]&&(tag[g][i]==((addr>>6)/wnum)))
+    		if(myC.groups[g].ways[i].valid&&(myC.groups[g].ways[i].tag==((addr>>6)/wnum)))
         { 
           //assert(0);
-          dirty[g][i]=true;
+          myC.groups[g].ways[i].dirty=true;
           uint32_t rnum=(data&wmask);
           int  j=addr%BLOCK_SIZE;
           //先当是按照单元来的
           while(rnum!=0){
-          data[g][i][j]&=(~wmask);
-          data[g][i][j]+=rnum;
+          myC.groups[g].ways[i].data[j]&=(~wmask);
+          myC.groups[g].ways[i].data[j]+=rnum;
           rnum>>=8;
           wmask>>=8;
           j++;
@@ -119,18 +144,18 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   }
   //缺失
   for(int i=0;i<wnum;i++){
-    if(!valid[g][i]){
-      valid[g][i]=true;
-      mem_read(addr>>6,data[g][i]);
-      tag[g][i]=(addr>>6)/wnum;
-      dirty[g][i]=true;
+    if(!myC.groups[g].ways[i].valid){
+      myC.groups[g].ways[i].valid=true;
+      mem_read(addr>>6,myC.groups[g].ways[i].data[i]);
+      myC.groups[g].ways[i].tag=(addr>>6)/wnum;
+      myC.groups[g].ways[i].dirty=true;
 
       uint32_t rnum=(data&wmask);
       int j=addr%BLOCK_SIZE;
           //先当是按照单元来的
           while(rnum!=0){
-          data[g][i][j]&=(~wmask);
-          data[g][i][j]+=rnum;
+          myC.groups[g].ways[i].data[j]&=(~wmask);
+          myC.groups[g].ways[i].data[j]+=rnum;
           rnum>>=8;
           wmask>>=8;
           j++;
@@ -142,14 +167,15 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   }
 
   int lucker=rand()%wnum;
-  mem_read(addr>>6,data[g][lucker]);
-  tag[g][lucker]=(addr>>6)/wnum;
+  mem_read(addr>>6,myC.groups[g].ways[lucker].data);
+  myC.groups[g].ways[lucker].tag=(addr>>6)/wnum;
   uint32_t rnum=(data&wmask);
   int z=addr%BLOCK_SIZE;
           //先当是按照单元来的
           while(rnum!=0){
-          data[g][lucker][z]&=(~wmask);
-          data[g][lucker][z]+=rnum;
+          
+          myC.groups[g].ways[lucker].data[z]&=(~wmask);
+          myC.groups[g].ways[lucker].data[z]+=rnum;
           rnum>>=8;
           wmask>>=8;
           z++;
@@ -174,8 +200,8 @@ void init_cache(int total_size_width, int associativity_width) {
 
   for(int i=0;i<gnum;i++){
     for(int j=0;j<wnum;j++){
-      valid[i][j]=false;
-      dirty[i][j]=false;
+      myC.groups[i].ways[j].valid=false;
+      myC.groups[i].ways[j].dirty=false;
     }
 
   }
