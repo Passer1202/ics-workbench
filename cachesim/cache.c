@@ -53,6 +53,7 @@ uint32_t cache_read(uintptr_t addr) {
   }
   //缺失
   for(uint32_t i=0;i<wnum;i++){
+    assert(0);
     if(cache[g].valid[i]==false){
       cache[g].valid[i]=true;
       mem_read(addr>>6,cache[g].data[i]);
