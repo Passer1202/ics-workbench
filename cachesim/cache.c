@@ -146,7 +146,7 @@ void init_cache(int total_size_width, int associativity_width) {
   wnum=exp2(associativity_width);//路数
   gnum=((uint64_t)(1<<(total_size_width-6))/wnum);//（组数=总空间/路数/64B）//先不考虑不整除；
 
-  printf("%d\n",gnum);
+  printf("%d\n",total_size_width);
 
   //srand(time(NULL));
 
