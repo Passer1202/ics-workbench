@@ -42,9 +42,10 @@ uint32_t cache_read(uintptr_t addr) {
   uint32_t g=(addr>>6)%gnum;
 
   //命中
+  assert(0);
   for(int i=0;i<wnum;i++){
     if(cache[g].valid[i]&&(cache[g].tag[i]==((addr>>6))))
-    assert(0);
+      assert(0);
       return cache[g].data[i][addr%BLOCK_SIZE];
   }
   //缺失
