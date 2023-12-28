@@ -68,9 +68,10 @@ uint32_t cache_read(uintptr_t addr) {
   //assert(!(addr>>20));
   //assert(exp2(addr)<=MEM_SIZE);
 
+  addr=addr&~0x3;
   uint32_t g=(addr>>BLOCK_WIDTH)&mask_with_len(glen);
 
-  addr=addr&~0x3;
+  
   //printf("%d\n",gnum);
   //printf("%d\n",g);
   //命中
@@ -78,7 +79,9 @@ uint32_t cache_read(uintptr_t addr) {
   uint32_t offset=addr&mask_with_len(BLOCK_WIDTH);
   uint32_t tag=(addr>>(BLOCK_WIDTH+glen))& mask_with_len(tlen);
 
-  for(uint32_t i=0;i<wnum;i++){
+  assert(mask_with_len(tlen) == ~(~0 << tlen));
+
+  for(int i=0;i<wnum;i++){
     if(myC.groups[g].ways[i].valid==true&&(myC.groups[g].ways[i].tag==tag))
     {
       //assert(0);
@@ -204,7 +207,7 @@ void init_cache(int total_size_width, int associativity_width) {
 
   tlen=32-glen-BLOCK_WIDTH;//tag长度
 
-  printf("%d\n",glen);
+  //printf("%d\n",glen);
 
   //srand(time(NULL));
   myC.groups=(group*)malloc(gnum*sizeof(group));
