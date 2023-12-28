@@ -142,7 +142,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
 	for (i = 0;i < line_of_group;i++) {
 		if (cache[group_id][i].valid && cache[group_id][i].tag == tag) {
 			// 判断有效位和标记
-			hit_increase(1);
+		//	hit_increase(1);
 			cache[group_id][i].modified = 1;
 			ptr = (uint32_t *)&cache[group_id][i].data[offset];
 			*ptr = (*ptr & ~wmask) | (data & wmask);
