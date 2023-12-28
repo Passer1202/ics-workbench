@@ -16,9 +16,9 @@ void cycle_increase(int n) { cycle_cnt += n; }
 
 #define MAX_group 100000//最多组数
 
-int wnum=0;//路数
+uint32_t wnum=0;//路数
 
-int gnum=0;//组数
+uint32_t gnum=0;//组数
 
 typedef struct
 {
@@ -45,9 +45,9 @@ typedef struct
 
 cache myC;
 
-int tlen;
+uint32_t tlen;
 
-int glen;//组号长度
+uint32_t glen;//组号长度
 
 //struct{
 //  bool valid[16];//是否有效
@@ -103,7 +103,7 @@ uint32_t cache_read(uintptr_t addr) {
       
       myC.groups[g].ways[i].valid=1;
       mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[i].data);
-      myC.groups[g].ways[i].tag=addr >> (BLOCK_WIDTH + glen);
+      myC.groups[g].ways[i].tag=tag;
       //assert(0);
       uint32_t ans=0;
       
@@ -167,7 +167,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
     if(!myC.groups[g].ways[i].valid){
       myC.groups[g].ways[i].valid=true;
       mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[i].data);
-      myC.groups[g].ways[i].tag=addr>>(BLOCK_WIDTH+glen);
+      myC.groups[g].ways[i].tag=tag;
       myC.groups[g].ways[i].dirty=true;
 
 //assert(0);
@@ -186,7 +186,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[lucker].data);
   myC.groups[g].ways[lucker].dirty=true;
   myC.groups[g].ways[lucker].valid=true;
-  myC.groups[g].ways[lucker].tag=addr >> (BLOCK_WIDTH + glen);
+  myC.groups[g].ways[lucker].tag=tag;
 
           //先当是按照单元来的
           uint32_t* p=(uint32_t*)&myC.groups[g].ways[lucker].data[offset];
@@ -203,13 +203,13 @@ void init_cache(int total_size_width, int associativity_width) {
   //assert((exp2(associativity_width))<MAX_way);
   //assert((uint64_t)(1<<total_size_width)<(uint64_t)(MAX_group<<6)*(uint64_t)(1<<associativity_width));
   
-  wnum=(int)exp2(associativity_width);//路数
+  wnum=exp2(associativity_width);//路数
 
-  glen=(int)total_size_width-BLOCK_WIDTH-associativity_width;
+  glen=total_size_width-BLOCK_WIDTH-associativity_width;
 
-  gnum=(int)exp2(glen);//（组数=总空间/路数/64B）//先不考虑不整除；
+  gnum=exp2(glen);//（组数=总空间/路数/64B）//先不考虑不整除；
 
-  tlen=(int)32-glen-BLOCK_SIZE;//tag长度
+  tlen=32-glen-BLOCK_WIDTH;//tag长度
 
   //printf("%d\n",glen);
 
