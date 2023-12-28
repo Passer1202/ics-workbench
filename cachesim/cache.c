@@ -72,7 +72,7 @@ uint32_t cache_read(uintptr_t addr) {
   //命中
   //assert(0);
   for(uint32_t i=0;i<wnum;i++){
-    if(myC.groups[g].ways[i].valid==true&&(myC.groups[g].ways[i].tag==((addr>>6)/gnum)& ~(~0 << tlen)))
+    if(myC.groups[g].ways[i].valid==true&&(myC.groups[g].ways[i].tag==((addr>>6)/gnum)& (~(~0 << tlen))))
     {
       //assert(0);
       uint32_t ans=0;
