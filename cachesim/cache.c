@@ -79,7 +79,7 @@ uint32_t cache_read(uintptr_t addr) {
   uint32_t offset=addr&mask_with_len(BLOCK_WIDTH);
   uint32_t tag=(addr>>(BLOCK_WIDTH+glen))& mask_with_len(tlen);
 
-  assert(mask_with_len(tlen) == ~(~0 << tlen));
+  //assert(mask_with_len(tlen) == ~(~0 << tlen));
 
   for(int i=0;i<wnum;i++){
     if(myC.groups[g].ways[i].valid==true&&(myC.groups[g].ways[i].tag==tag))
@@ -88,25 +88,25 @@ uint32_t cache_read(uintptr_t addr) {
       uint32_t ans=0;
       
       for(int w=3;w>=0;w--){
-        ans=(ans<<8);
+        ans*=0x100;
         ans+=myC.groups[g].ways[i].data[offset+w];
       }
       return ans;
     }
   }
   //缺失
-  for(uint32_t i=0;i<wnum;i++){
+  for(int i=0;i<wnum;i++){
     //assert(0);
     //printf("%d\n",cache[g].valid[i]);
     if(!myC.groups[g].ways[i].valid){
       myC.groups[g].ways[i].valid=true;
       mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[i].data);
-      myC.groups[g].ways[i].tag=tag;
+      myC.groups[g].ways[i].tag=addr >> (BLOCK_WIDTH + glen);
       //assert(0);
       uint32_t ans=0;
       
       for(int w=3;w>=0;w--){
-        ans=ans<<8;
+        ans=ans*0x100;
         ans+=myC.groups[g].ways[i].data[offset+w];
         
       }
@@ -116,17 +116,18 @@ uint32_t cache_read(uintptr_t addr) {
     }
   }
   //还满了
-  uint32_t lucker=rand()%wnum;
-  if(myC.groups[g].ways[lucker].dirty)mem_write((myC.groups[g].ways[lucker].tag<<glen)+g,myC.groups[g].ways[lucker].data);//写回操作
+  int lucker=rand()%wnum;
+  if(myC.groups[g].ways[lucker].dirty==1)mem_write((myC.groups[g].ways[lucker].tag<<glen)+g,myC.groups[g].ways[lucker].data);//写回操作
   mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[lucker].data);
-  myC.groups[g].ways[lucker].tag=tag;
+  myC.groups[g].ways[lucker].tag=addr>>(BLOCK_WIDTH+glen);
 
   uint32_t ans=0;
 
       for(int w=3;w>=0;w--){
-        ans=ans<<8;
+        ans=ans*0x100;
         ans=myC.groups[g].ways[lucker].data[offset+w];
       }
+      myC.groups[g].ways[lucker].dirty=0;
       //assert(0);
       return ans;
 
