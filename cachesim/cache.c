@@ -177,8 +177,8 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   uint32_t lucker=rand()%wnum;
   if(myC.groups[g].ways[lucker].dirty)mem_write((myC.groups[g].ways[lucker].tag<<glen)+g,myC.groups[g].ways[lucker].data);
   mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[lucker].data);
-
-  myC.groups[g].ways[lucker].tag=((addr>>6)/gnum)&~(~0 << tlen);
+  myC.groups[g].ways[lucker].dirty=true;
+  myC.groups[g].ways[lucker].tag=tag;
   uint32_t rnum=(data&wmask);
   uint32_t  j=addr&mask_with_len(BLOCK_WIDTH);
           //先当是按照单元来的
