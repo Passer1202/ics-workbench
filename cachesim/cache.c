@@ -204,7 +204,7 @@ void init_cache(int total_size_width, int associativity_width) {
 
   tlen=32-glen-BLOCK_WIDTH;//tag长度
 
-  //printf("%d\n",gnum);
+  printf("%d\n",glen);
 
   //srand(time(NULL));
   myC.groups=(group*)malloc(gnum*sizeof(group));
