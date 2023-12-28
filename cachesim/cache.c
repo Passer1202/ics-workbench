@@ -32,14 +32,14 @@ typedef struct
 typedef struct
 {
   /* data */
-  line* ways;
+  line ways[16];
 
 }group;
 
 typedef struct 
 {
   /* data */
-  group* groups;
+  group groups[10000];
 }cache;
 
 cache myC;
@@ -205,7 +205,7 @@ void init_cache(int total_size_width, int associativity_width) {
     }
 
   }
-  assert(0);
+  
 }
 
 
