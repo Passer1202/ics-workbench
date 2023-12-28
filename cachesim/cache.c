@@ -40,7 +40,7 @@ uint32_t cache_read(uintptr_t addr) {
   //assert(exp2(addr)<=MEM_SIZE);
 
   uint32_t g=(addr>>6)%gnum;
-  printf("%d\n",gnum);
+  //printf("%d\n",gnum);
   //printf("%d\n",g);
   //命中
   //assert(0);
@@ -85,6 +85,7 @@ uint32_t cache_read(uintptr_t addr) {
       for(int w=3;w>=0;w--){
         ans=(ans<<8)+cache[g].data[lucker][a+w];
       }
+      assert(0);
       return ans;
 
   //return 0;
