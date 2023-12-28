@@ -202,7 +202,7 @@ void init_cache(int total_size_width, int associativity_width) {
 
   gnum=exp2(glen);//（组数=总空间/路数/64B）//先不考虑不整除；
 
-  tlen=32-glen-BLOCK_WIDTH;//tag长度
+  tlen=32-glen-BLOCK_SIZE;//tag长度
 
   printf("%d\n",gnum);
 
