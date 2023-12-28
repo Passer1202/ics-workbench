@@ -32,14 +32,14 @@ typedef struct
 typedef struct
 {
   /* data */
-  line ways[16];
+  line* ways;
 
 }group;
 
 typedef struct 
 {
   /* data */
-  group groups[10000];
+  group* groups;
 }cache;
 
 cache myC;
@@ -71,7 +71,7 @@ uint32_t cache_read(uintptr_t addr) {
   for(uint32_t i=0;i<wnum;i++){
     if(myC.groups[g].ways[i].valid==true&&(myC.groups[g].ways[i].tag==((addr>>6)/wnum)))
     {
-      assert(0);
+      //assert(0);
       uint32_t ans=0;
       uint32_t a=addr%BLOCK_SIZE;
       for(int w=3;w>=0;w--){
@@ -121,6 +121,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   uint32_t g=(addr>>6)%gnum;
   //找到了
   //assert(0);
+  
 	for(uint32_t i=0;i<wnum;i++){
     //printf("%d",cache[g].valid[i]);
    //assert(0);
@@ -197,8 +198,10 @@ void init_cache(int total_size_width, int associativity_width) {
   //printf("%d\n",total_size_width);
 
   //srand(time(NULL));
+  myC.groups=(group*)malloc(gnum*sizeof(group));
 
   for(int i=0;i<gnum;i++){
+    myC.groups[i].ways=(line*)malloc(wnum*sizeof(line));
     for(int j=0;j<wnum;j++){
       myC.groups[i].ways[j].valid=false;
       myC.groups[i].ways[j].dirty=false;
