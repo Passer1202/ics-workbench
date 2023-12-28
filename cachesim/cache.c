@@ -120,14 +120,14 @@ uint32_t cache_read(uintptr_t addr) {
 void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   uint32_t g=(addr>>6)%gnum;
   //找到了
-  assert(0);
+  //assert(0);
   
 	for(uint32_t i=0;i<wnum;i++){
     //printf("%d",cache[g].valid[i]);
    //assert(0);
     		if(myC.groups[g].ways[i].valid&&(myC.groups[g].ways[i].tag==((addr>>6)/gnum)))
         { 
-          //assert(0);
+          assert(0);
           myC.groups[g].ways[i].dirty=true;
           uint32_t rnum=(data&wmask);
           int  j=addr%BLOCK_SIZE;
