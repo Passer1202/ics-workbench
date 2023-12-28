@@ -28,11 +28,6 @@ static struct{
 }cache[MAX_group];
 //定义cache
 
-
-
-
-
-
 // TODO: implement the following functions
 
 // 从 cache 中读出 addr 地址处的 4 字节数据
@@ -146,6 +141,7 @@ void init_cache(int total_size_width, int associativity_width) {
   wnum=exp2(associativity_width);//路数
   gnum=((uint64_t)(1<<(total_size_width-6))/wnum);//（组数=总空间/路数/64B）//先不考虑不整除；
 
+  printf("%d",wnum);
 
   //srand(time(NULL));
 
