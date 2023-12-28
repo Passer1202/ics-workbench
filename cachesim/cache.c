@@ -99,7 +99,8 @@ uint32_t cache_read(uintptr_t addr) {
     //assert(0);
     //printf("%d\n",cache[g].valid[i]);
     if(!myC.groups[g].ways[i].valid){
-      myC.groups[g].ways[i].valid=true;
+      
+      myC.groups[g].ways[i].valid=1;
       mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[i].data);
       myC.groups[g].ways[i].tag=addr >> (BLOCK_WIDTH + glen);
       //assert(0);
@@ -125,7 +126,7 @@ uint32_t cache_read(uintptr_t addr) {
 
       for(int w=3;w>=0;w--){
         ans=ans*0x100;
-        ans=myC.groups[g].ways[lucker].data[offset+w];
+        ans+=myC.groups[g].ways[lucker].data[offset+w];
       }
       myC.groups[g].ways[lucker].dirty=0;
       //assert(0);
