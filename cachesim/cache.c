@@ -4,8 +4,6 @@
 void mem_read(uintptr_t block_num, uint8_t *buf);
 void mem_write(uintptr_t block_num, const uint8_t *buf);
 
-/*2的16次方，4路组相连*/
-
 static uint64_t cycle_cnt = 0;
 
 void cycle_increase(int n) { cycle_cnt += n; }
@@ -22,7 +20,7 @@ uint32_t gnum=0;//组数
 
 typedef struct
 {
-  /* data */
+ 
   bool valid;
   bool dirty;
   uint32_t tag;
@@ -30,19 +28,10 @@ typedef struct
 
 } line;
 
-typedef struct
-{
-  /* data */
-  line* ways;
+typedef line* group;
 
-}group;
+typedef group* cache;
 
-typedef struct 
-{
-  /* data */
-  group* groups;
-  
-}cache;
 
 cache myC;
 
@@ -71,46 +60,42 @@ uint32_t cache_read(uintptr_t addr) {
   //assert(exp2(addr)<=MEM_SIZE);
 
   addr=addr&(~0x3);
-  uint32_t g=(addr>>BLOCK_WIDTH)&mask_with_len(glen);
 
-  
-  //printf("%d\n",gnum);
-  //printf("%d\n",g);
-  //命中
-  //assert(0);
+  uint32_t g=(addr>>BLOCK_WIDTH)&mask_with_len(glen);
   uint32_t offset=addr&mask_with_len(BLOCK_WIDTH);
   uint32_t tag=(addr>>(BLOCK_WIDTH+glen))& mask_with_len(tlen);
 
-  //assert(mask_with_len(tlen) == ~(~0 << tlen));
-
+  
+  //hit
   for(int i=0;i<wnum;i++){
-    if(myC.groups[g].ways[i].valid==true&&(myC.groups[g].ways[i].tag==tag))
+    if(myC[g][i].valid==true&&(myC[g][i].tag==tag))
     {
       //assert(0);
       uint32_t ans=0;
       
       for(int w=3;w>=0;w--){
         ans<<=8;
-        ans+=myC.groups[g].ways[i].data[offset+w];
+        ans+=myC[g][i].data[offset+w];
       }
       return ans;
     }
   }
-  //缺失
+  //miss
+
   for(int i=0;i<wnum;i++){
     //assert(0);
     //printf("%d\n",cache[g].valid[i]);
-    if(!myC.groups[g].ways[i].valid){
+    if(!myC[g][i].valid){
       
-      myC.groups[g].ways[i].valid=1;
-      mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[i].data);
-      myC.groups[g].ways[i].tag=tag;
+      myC[g][i].valid=1;
+      mem_read(addr>>BLOCK_WIDTH,myC[g][i].data);
+      myC[g][i].tag=tag;
       //assert(0);
       uint32_t ans=0;
       
       for(int w=3;w>=0;w--){
         ans<<=8;
-        ans+=myC.groups[g].ways[i].data[offset+w];
+        ans+=myC[g][i].data[offset+w];
         
       }
       //assert(0);
@@ -120,17 +105,17 @@ uint32_t cache_read(uintptr_t addr) {
   }
   //还满了
   int lucker=rand()%wnum;
-  if(myC.groups[g].ways[lucker].dirty==1)mem_write((myC.groups[g].ways[lucker].tag<<glen)+g,myC.groups[g].ways[lucker].data);//写回操作
-  mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[lucker].data);
-  myC.groups[g].ways[lucker].tag=addr>>(BLOCK_WIDTH+glen);
+  if(myC[g][lucker].dirty==1)mem_write((myC[g][lucker].tag<<glen)+g,myC[g][lucker].data);//写回操作
+  mem_read(addr>>BLOCK_WIDTH,myC[g][lucker].data);
+  myC[g][lucker].tag=tag;
 
   uint32_t ans=0;
 
       for(int w=3;w>=0;w--){
         ans<<=8;
-        ans+=myC.groups[g].ways[lucker].data[offset+w];
+        ans+=myC[g][lucker].data[offset+w];
       }
-      myC.groups[g].ways[lucker].dirty=0;
+      myC[g][lucker].dirty=0;
       //assert(0);
       return ans;
 
@@ -151,31 +136,31 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
 	for(int i=0;i<wnum;i++){
     //printf("%d",cache[g].valid[i]);
    //assert(0);
-    		if(myC.groups[g].ways[i].valid&&(myC.groups[g].ways[i].tag==tag))
+    		if(myC[g][i].valid&&(myC[g][i].tag==tag))
         { 
           //assert(0);
-          myC.groups[g].ways[i].dirty=true;
+          myC[g][i].dirty=true;
           //uint32_t rnum=(data&wmask);
           //uint32_t  j=addr&mask_with_len(BLOCK_WIDTH);
           //先当是按照单元来的
-          uint32_t* p=(uint32_t*)&myC.groups[g].ways[i].data[offset];
+          uint32_t* p=(uint32_t*)&myC[g][i].data[offset];
           *p=(*p&~wmask)|(data&wmask);
           return;
         }
   }
   //缺失
   for(int i=0;i<wnum;i++){
-    if(!myC.groups[g].ways[i].valid){
-      myC.groups[g].ways[i].valid=true;
-      mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[i].data);
-      myC.groups[g].ways[i].tag=tag;
-      myC.groups[g].ways[i].dirty=true;
+    if(!myC[g][i].valid){
+      myC[g][i].valid=true;
+      mem_read(addr>>BLOCK_WIDTH,myC[g][i].data);
+      myC[g][i].tag=tag;
+      myC[g][i].dirty=true;
 
 //assert(0);
       //uint32_t rnum=(data&wmask);
       //uint32_t  j=addr&mask_with_len(BLOCK_WIDTH);
           //先当是按照单元来的
-          uint32_t* p=(uint32_t*)&myC.groups[g].ways[i].data[offset];
+          uint32_t* p=(uint32_t*)&myC[g][i].data[offset];
           *p=(*p&~wmask)|(data&wmask);
          return;
          
@@ -183,14 +168,14 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   }
   //assert(0);
   int lucker=rand()%wnum;
-  if(myC.groups[g].ways[lucker].dirty)mem_write((myC.groups[g].ways[lucker].tag<<glen)+g,myC.groups[g].ways[lucker].data);
-  mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[lucker].data);
-  myC.groups[g].ways[lucker].dirty=true;
-  myC.groups[g].ways[lucker].valid=true;
-  myC.groups[g].ways[lucker].tag=tag;
+  if(myC[g][lucker].dirty)mem_write((myC[g][lucker].tag<<glen)+g,myC[g][lucker].data);
+  mem_read(addr>>BLOCK_WIDTH,myC[g][lucker].data);
+  myC[g][lucker].dirty=true;
+  myC[g][lucker].valid=true;
+  myC[g][lucker].tag=tag;
 
   //先当是按照单元来的
-  uint32_t* p=(uint32_t*)&myC.groups[g].ways[lucker].data[offset];
+  uint32_t* p=(uint32_t*)&myC[g][lucker].data[offset];
   *p=(*p&~wmask)|(data&wmask);
   
   //assert(0);
@@ -215,13 +200,13 @@ void init_cache(int total_size_width, int associativity_width) {
   //printf("%d\n",glen);
 
   //srand(time(NULL));
-  myC.groups=(group*)malloc(gnum*sizeof(group));
+  myC=(cache*)malloc(gnum*sizeof(group));
 
   for(int i=0;i<gnum;i++){
-    myC.groups[i].ways=(line*)malloc(wnum*sizeof(line));
+    myC[i]=(group*)malloc(wnum*sizeof(line));
     for(int j=0;j<wnum;j++){
-      myC.groups[i].ways[j].valid=false;
-      myC.groups[i].ways[j].dirty=false;
+      myC[i][j].valid=false;
+      myC[i][j].dirty=false;
     }
 
   }
