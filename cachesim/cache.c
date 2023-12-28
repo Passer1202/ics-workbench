@@ -86,7 +86,7 @@ uint32_t cache_read(uintptr_t addr) {
     //printf("%d\n",cache[g].valid[i]);
     if(!myC.groups[g].ways[i].valid){
       myC.groups[g].ways[i].valid=true;
-      mem_read(addr/64,myC.groups[g].ways[i].data[i]);
+      mem_read(addr/64,myC.groups[g].ways[i].data);
       myC.groups[g].ways[i].tag=(addr>>6)/wnum;
       //assert(0);
       uint32_t ans=0;
@@ -146,7 +146,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   for(int i=0;i<wnum;i++){
     if(!myC.groups[g].ways[i].valid){
       myC.groups[g].ways[i].valid=true;
-      mem_read(addr>>6,myC.groups[g].ways[i].data[i]);
+      mem_read(addr>>6,myC.groups[g].ways[i].data);
       myC.groups[g].ways[i].tag=(addr>>6)/wnum;
       myC.groups[g].ways[i].dirty=true;
 
