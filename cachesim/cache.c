@@ -132,7 +132,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
           //assert(0);
           myC.groups[g].ways[i].dirty=true;
           //uint32_t rnum=(data&wmask);
-          int  j=addr%BLOCK_SIZE;
+          uint32_t  j=addr%BLOCK_SIZE;
           //先当是按照单元来的
           uint32_t* p=(uint32_t*)&myC.groups[g].ways[i].data[j];
           *p=(*p&~wmask)|(data&wmask);
@@ -148,7 +148,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
       myC.groups[g].ways[i].dirty=true;
 //assert(0);
       uint32_t rnum=(data&wmask);
-      int  j=addr%BLOCK_SIZE;
+      uint32_t  j=addr%BLOCK_SIZE;
           //先当是按照单元来的
           uint32_t* p=(uint32_t*)&myC.groups[g].ways[i].data[j];
           *p=(*p&~wmask)|(data&wmask);
@@ -163,7 +163,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
 
   myC.groups[g].ways[lucker].tag=(addr>>6)/gnum;
   uint32_t rnum=(data&wmask);
-  int  j=addr%BLOCK_SIZE;
+  uint32_t  j=addr%BLOCK_SIZE;
           //先当是按照单元来的
           uint32_t* p=(uint32_t*)&myC.groups[g].ways[lucker].data[j];
           *p=(*p&~wmask)|(data&wmask);
