@@ -19,9 +19,9 @@ uint32_t wnum=0;//路数
 uint32_t gnum=0;//组数
 
 struct{
-  bool valid[16];//是否有效
+  bool valid[MAX_way];//是否有效
   uint16_t tag[MAX_way];//标志位
-  uint8_t data[MAX_way][BLOCK_SIZE];//数据
+  uint8_t data[16][BLOCK_SIZE];//数据
 }cache[MAX_group];
 //定义cache
 
