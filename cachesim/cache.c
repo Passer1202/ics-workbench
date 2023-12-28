@@ -44,7 +44,7 @@ uint32_t cache_read(uintptr_t addr) {
   //命中
   for(int i=0;i<wnum;i++){
     if(cache[g].valid[i]&&(cache[g].tag[i]==((addr>>6)/wnum)))
-    printf("%ld\n",(addr>>6)/wnum);
+    assert(0);
       return cache[g].data[i][addr%BLOCK_SIZE];
   }
   //缺失
