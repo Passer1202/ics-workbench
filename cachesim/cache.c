@@ -95,7 +95,7 @@ uint32_t cache_read(uintptr_t addr) {
         ans=(ans<<8)+myC.groups[g].ways[i].data[a+w];
         
       }
-      //assert(0);
+      assert(0);
       return ans;
       //assert(0);
     }
@@ -111,7 +111,7 @@ uint32_t cache_read(uintptr_t addr) {
       for(int w=3;w>=0;w--){
         ans=(ans<<8)+myC.groups[g].ways[lucker].data[a+w];
       }
-      //assert(0);
+      assert(0);
       return ans;
 
   //return 0;
@@ -157,7 +157,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
          
     }
   }
-  assert(0);
+  //assert(0);
   int lucker=rand()%wnum;
   if(myC.groups[g].ways[lucker].dirty)mem_write(myC.groups[g].ways[lucker].tag*gnum+g,myC.groups[g].ways[lucker].data);
   mem_read(addr>>6,myC.groups[g].ways[lucker].data);
