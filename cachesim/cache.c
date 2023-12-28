@@ -73,7 +73,7 @@ uint32_t cache_read(uintptr_t addr) {
     for (i = 0;i < line_of_group;i++) {
 		if (cache[group_id][i].valid && cache[group_id][i].tag == tag) {
 			// 判断有效位和标记
-			hit_increase(1);
+			//hit_increase(1);
 			val = 0;
 			for (j = 3;j >= 0;j--) {
 				val *= 0x100;
