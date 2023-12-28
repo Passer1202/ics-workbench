@@ -140,11 +140,12 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   addr=addr&~0x3;
   uint32_t g=(addr>>BLOCK_WIDTH)&mask_with_len(glen);
   uint32_t offset=addr&mask_with_len(BLOCK_WIDTH);
+  assert( ~(~0 << BLOCK_WIDTH)==mask_with_len(BLOCK_WIDTH));
   uint32_t tag=(addr>>(BLOCK_WIDTH+glen))& mask_with_len(tlen);
   //找到了
   //assert(0);
   
-	for(uint32_t i=0;i<wnum;i++){
+	for(int i=0;i<wnum;i++){
     //printf("%d",cache[g].valid[i]);
    //assert(0);
     		if(myC.groups[g].ways[i].valid&&(myC.groups[g].ways[i].tag==tag))
@@ -164,7 +165,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
     if(!myC.groups[g].ways[i].valid){
       myC.groups[g].ways[i].valid=true;
       mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[i].data);
-      myC.groups[g].ways[i].tag=tag;
+      myC.groups[g].ways[i].tag=addr>>(BLOCK_WIDTH+glen);
       myC.groups[g].ways[i].dirty=true;
 
 //assert(0);
@@ -178,15 +179,15 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
     }
   }
   //assert(0);
-  uint32_t lucker=rand()%wnum;
+  int lucker=rand()%wnum;
   if(myC.groups[g].ways[lucker].dirty)mem_write((myC.groups[g].ways[lucker].tag<<glen)+g,myC.groups[g].ways[lucker].data);
   mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[lucker].data);
   myC.groups[g].ways[lucker].dirty=true;
-  myC.groups[g].ways[lucker].tag=tag;
-  uint32_t rnum=(data&wmask);
-  uint32_t  j=addr&mask_with_len(BLOCK_WIDTH);
+  myC.groups[g].ways[lucker].valid=true;
+  myC.groups[g].ways[lucker].tag=addr >> (BLOCK_WIDTH + glen);;
+
           //先当是按照单元来的
-          uint32_t* p=(uint32_t*)&myC.groups[g].ways[lucker].data[j];
+          uint32_t* p=(uint32_t*)&myC.groups[g].ways[lucker].data[offset];
           *p=(*p&~wmask)|(data&wmask);
   
   //assert(0);
@@ -206,7 +207,7 @@ void init_cache(int total_size_width, int associativity_width) {
 
   gnum=exp2(glen);//（组数=总空间/路数/64B）//先不考虑不整除；
 
-  tlen=32-glen-BLOCK_WIDTH;//tag长度
+  tlen=32-glen-BLOCK_SIZE;//tag长度
 
   //printf("%d\n",glen);
 
