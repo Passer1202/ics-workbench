@@ -27,6 +27,7 @@ typedef struct
   bool dirty;
   uint32_t tag;
   uint8_t data[64];
+
 } line;
 
 typedef struct
@@ -68,7 +69,7 @@ uint32_t cache_read(uintptr_t addr) {
   //assert(!(addr>>20));
   //assert(exp2(addr)<=MEM_SIZE);
 
-  addr=addr&~0x3;
+  addr=addr&(~0x3);
   uint32_t g=(addr>>BLOCK_WIDTH)&mask_with_len(glen);
 
   
@@ -88,7 +89,7 @@ uint32_t cache_read(uintptr_t addr) {
       uint32_t ans=0;
       
       for(int w=3;w>=0;w--){
-        ans*=0x100;
+        ans<<=8;
         ans+=myC.groups[g].ways[i].data[offset+w];
       }
       return ans;
@@ -107,7 +108,7 @@ uint32_t cache_read(uintptr_t addr) {
       uint32_t ans=0;
       
       for(int w=3;w>=0;w--){
-        ans=ans*0x100;
+        ans<<=8;
         ans+=myC.groups[g].ways[i].data[offset+w];
         
       }
@@ -125,7 +126,7 @@ uint32_t cache_read(uintptr_t addr) {
   uint32_t ans=0;
 
       for(int w=3;w>=0;w--){
-        ans=ans*0x100;
+        ans<<=8;
         ans+=myC.groups[g].ways[lucker].data[offset+w];
       }
       myC.groups[g].ways[lucker].dirty=0;
