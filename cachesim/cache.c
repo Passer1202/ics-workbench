@@ -86,7 +86,7 @@ uint32_t cache_read(uintptr_t addr) {
     //printf("%d\n",cache[g].valid[i]);
     if(!myC.groups[g].ways[i].valid){
       myC.groups[g].ways[i].valid=true;
-      mem_read(addr/64,myC.groups[g].ways[i].data);
+      mem_read(addr>>6,myC.groups[g].ways[i].data);
       myC.groups[g].ways[i].tag=(addr>>6)/wnum;
       //assert(0);
       uint32_t ans=0;
@@ -203,8 +203,8 @@ void init_cache(int total_size_width, int associativity_width) {
   for(int i=0;i<gnum;i++){
     myC.groups[i].ways=(line*)malloc(wnum*sizeof(line));
     for(int j=0;j<wnum;j++){
-      myC.groups[i].ways[j].valid=false;
-      myC.groups[i].ways[j].dirty=false;
+      myC.groups[i].ways[j].valid=0;
+      myC.groups[i].ways[j].dirty=0;
     }
 
   }
