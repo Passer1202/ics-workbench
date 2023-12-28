@@ -109,7 +109,7 @@ uint32_t cache_read(uintptr_t addr) {
       for(int w=3;w>=0;w--){
         ans=(ans<<8)+myC.groups[g].ways[lucker].data[a+w];
       }
-      //assert(0);
+      assert(0);
       return ans;
 
   //return 0;
@@ -162,7 +162,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
           //先当是按照单元来的
           uint32_t* p=(uint32_t*)&myC.groups[g].ways[lucker].data[j];
           *p=(*p&~wmask)|(data&wmask);
-  assert(0);
+  //assert(0);
 
   
 }
