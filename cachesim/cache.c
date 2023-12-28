@@ -20,7 +20,7 @@ uint32_t wnum=0;//路数
 
 uint32_t gnum=0;//组数
 
-struct{
+static struct{
   bool valid[MAX_way];//是否有效
   bool dirty[MAX_way];
   uint16_t tag[MAX_way];//标志位
