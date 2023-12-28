@@ -85,7 +85,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
           //assert(0);
           cache[g].dirty[i]=true;
           uint32_t rnum=(data&wmask);
-          int  j=0;//addr%BLOCK_SIZE;
+          int  j=addr%BLOCK_SIZE;
           //先当是按照单元来的
           while(rnum!=0){
           cache[g].data[i][j]&=(~wmask);
@@ -107,7 +107,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
       cache[g].dirty[i]=true;
 
       uint32_t rnum=(data&wmask);
-      int j=0;//addr%BLOCK_SIZE;
+      int j=addr%BLOCK_SIZE;
           //先当是按照单元来的
           while(rnum!=0){
           cache[g].data[i][j]&=(~wmask);
@@ -126,7 +126,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   mem_read(addr>>6,cache[g].data[lucker]);
   cache[g].tag[lucker]=(addr>>6)/wnum;
   uint32_t rnum=(data&wmask);
-  int z=0;//addr%BLOCK_SIZE;
+  int z=addr%BLOCK_SIZE;
           //先当是按照单元来的
           while(rnum!=0){
           
