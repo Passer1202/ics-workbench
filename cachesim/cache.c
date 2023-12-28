@@ -200,10 +200,10 @@ void init_cache(int total_size_width, int associativity_width) {
   //printf("%d\n",glen);
 
   //srand(time(NULL));
-  myC=(cache*)malloc(gnum*sizeof(group));
+  myC=(cache)malloc(gnum*sizeof(group));
 
   for(int i=0;i<gnum;i++){
-    myC[i]=(group*)malloc(wnum*sizeof(line));
+    myC[i]=(group)malloc(wnum*sizeof(line));
     for(int j=0;j<wnum;j++){
       myC[i][j].valid=false;
       myC[i][j].dirty=false;
