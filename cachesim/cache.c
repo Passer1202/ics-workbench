@@ -57,7 +57,7 @@ void init_cache(int total_size_width, int associativity_width) {
 // 从cache中读出`addr`地址处的4字节数据
 // 若缺失, 需要先从内存中读入数据
 uint32_t cache_read(uintptr_t addr) {
-    try_increase(1);
+    //try_increase(1);
     uint32_t val;
     uint32_t offset;
     uint32_t group_id;
@@ -126,7 +126,7 @@ uint32_t cache_read(uintptr_t addr) {
 // 例如当`wmask`为`0xff`时, 只写入低8比特
 // 若缺失, 需要从先内存中读入数据
 void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
-	try_increase(1);
+	//try_increase(1);
 	uint32_t offset;
 	uint32_t group_id;
 	uint32_t tag;
