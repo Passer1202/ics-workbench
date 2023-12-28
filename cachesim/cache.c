@@ -124,7 +124,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   
 	for(uint32_t i=0;i<wnum;i++){
     //printf("%d",cache[g].valid[i]);
-   assert(0);
+   //assert(0);
     		if(myC.groups[g].ways[i].valid&&(myC.groups[g].ways[i].tag==((addr>>6)/gnum)))
         { 
           //assert(0);
