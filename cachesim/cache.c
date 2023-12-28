@@ -41,6 +41,7 @@ typedef struct
 {
   /* data */
   group* groups;
+  
 }cache;
 
 cache myC;
@@ -188,9 +189,9 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   myC.groups[g].ways[lucker].valid=true;
   myC.groups[g].ways[lucker].tag=tag;
 
-          //先当是按照单元来的
-          uint32_t* p=(uint32_t*)&myC.groups[g].ways[lucker].data[offset];
-          *p=(*p&~wmask)|(data&wmask);
+  //先当是按照单元来的
+  uint32_t* p=(uint32_t*)&myC.groups[g].ways[lucker].data[offset];
+  *p=(*p&~wmask)|(data&wmask);
   
   //assert(0);
 
@@ -219,8 +220,8 @@ void init_cache(int total_size_width, int associativity_width) {
   for(int i=0;i<gnum;i++){
     myC.groups[i].ways=(line*)malloc(wnum*sizeof(line));
     for(int j=0;j<wnum;j++){
-      myC.groups[i].ways[j].valid=0;
-      myC.groups[i].ways[j].dirty=0;
+      myC.groups[i].ways[j].valid=false;
+      myC.groups[i].ways[j].dirty=false;
     }
 
   }
