@@ -72,7 +72,7 @@ uint32_t cache_read(uintptr_t addr) {
   //命中
   //assert(0);
   for(uint32_t i=0;i<wnum;i++){
-    if(myC.groups[g].ways[i].valid==true&&(myC.groups[g].ways[i].tag==((addr>>6)/gnum)))
+    if(myC.groups[g].ways[i].valid==true&&(myC.groups[g].ways[i].tag==((addr>>6)/gnum)&~(~0 << tlen)))
     {
       //assert(0);
       uint32_t ans=0;
@@ -90,7 +90,7 @@ uint32_t cache_read(uintptr_t addr) {
     if(!myC.groups[g].ways[i].valid){
       myC.groups[g].ways[i].valid=true;
       mem_read(addr>>6,myC.groups[g].ways[i].data);
-      myC.groups[g].ways[i].tag=(addr>>6)/gnum;
+      myC.groups[g].ways[i].tag=((addr>>6)/gnum) &~(~0 << tlen);
       //assert(0);
       uint32_t ans=0;
       uint32_t a=addr%BLOCK_SIZE;
@@ -107,7 +107,7 @@ uint32_t cache_read(uintptr_t addr) {
   int lucker=rand()%wnum;
   if(myC.groups[g].ways[lucker].dirty)mem_write(myC.groups[g].ways[lucker].tag*gnum+g,myC.groups[g].ways[lucker].data);//写回操作
   mem_read(addr>>6,myC.groups[g].ways[lucker].data);
-  myC.groups[g].ways[lucker].tag=(addr>>6)/gnum;
+  myC.groups[g].ways[lucker].tag=((addr>>6)/gnum)&~(~0 << tlen);
 
   uint32_t ans=0;
       uint32_t a=addr%BLOCK_SIZE;
@@ -130,7 +130,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
 	for(uint32_t i=0;i<wnum;i++){
     //printf("%d",cache[g].valid[i]);
    //assert(0);
-    		if(myC.groups[g].ways[i].valid&&(myC.groups[g].ways[i].tag==((addr>>6)/gnum)))
+    		if(myC.groups[g].ways[i].valid&&(myC.groups[g].ways[i].tag==((addr>>6)/gnum)&~(~0 << tlen)))
         { 
           //assert(0);
           myC.groups[g].ways[i].dirty=true;
@@ -147,7 +147,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
     if(!myC.groups[g].ways[i].valid){
       myC.groups[g].ways[i].valid=true;
       mem_read(addr>>6,myC.groups[g].ways[i].data);
-      myC.groups[g].ways[i].tag=(addr>>6)/gnum;
+      myC.groups[g].ways[i].tag=((addr>>6)/gnum)&~(~0 << tlen);
       myC.groups[g].ways[i].dirty=true;
 
 //assert(0);
@@ -165,7 +165,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   if(myC.groups[g].ways[lucker].dirty)mem_write(myC.groups[g].ways[lucker].tag*gnum+g,myC.groups[g].ways[lucker].data);
   mem_read(addr>>6,myC.groups[g].ways[lucker].data);
 
-  myC.groups[g].ways[lucker].tag=(addr>>6)/gnum;
+  myC.groups[g].ways[lucker].tag=((addr>>6)/gnum)&~(~0 << tlen);
   uint32_t rnum=(data&wmask);
   uint32_t  j=addr%BLOCK_SIZE;
           //先当是按照单元来的
