@@ -181,7 +181,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
           wmask>>=8;
           z++;
           }
-assert(0);
+  //assert(0);
 
   
 }
