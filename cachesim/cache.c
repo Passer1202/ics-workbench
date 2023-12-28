@@ -12,215 +12,173 @@ void cycle_increase(int n) { cycle_cnt += n; }
 
 //void srand (unsigned int seed);
 
-#define MAX_way 16//路数最多为16
+// cache slot
+typedef struct {
+    uint32_t tag;
+    // 标记
+    uint8_t valid;
+    // 有效位
+    uint8_t modified;
+    // 脏位
+    uint8_t data[BLOCK_SIZE];
+    // 数据块
+} CacheSlot;
 
-#define MAX_group 100000//最多组数
+int line_of_group;
+// 每组行数
+int group_count;
+// cache组数
+int group_id_width;
+// 组id长度
+int tag_width;
+// tag长度
+CacheSlot * * cache;
+// cache
 
-uint32_t wnum=0;//路数
-
-uint32_t gnum=0;//组数
-
-typedef struct
-{
-  /* data */
-  bool valid;
-  bool dirty;
-  uint32_t tag;
-  uint8_t data[64];
-} line;
-
-typedef struct
-{
-  /* data */
-  line* ways;
-
-}group;
-
-typedef struct 
-{
-  /* data */
-  group* groups;
-}cache;
-
-cache myC;
-
-uint32_t tlen;
-
-uint32_t glen;//组号长度
-
-//struct{
-//  bool valid[16];//是否有效
- // bool dirty[16];
- // uint32_t tag[16];//标志位
- // uint8_t data[16][64];//数据
-//}cache[10000];
-//定义cache
-
-// TODO: implement the following functions
-
-// 从 cache 中读出 addr 地址处的 4 字节数据
-// 若缺失，需要先从内存中读入数据
-
-//32位地址
-
-uint32_t cache_read(uintptr_t addr) {
-  
-  //assert(!(addr>>20));
-  //assert(exp2(addr)<=MEM_SIZE);
-
-  uint32_t g=(addr>>BLOCK_WIDTH)&mask_with_len(glen);
-
-  //addr=addr&(~0x3);
-  //printf("%d\n",gnum);
-  //printf("%d\n",g);
-  //命中
-  //assert(0);
-  uint32_t offset=addr&mask_with_len(BLOCK_WIDTH);
-  uint32_t tag=(addr>>(BLOCK_WIDTH+glen))& mask_with_len(tlen);
-
-  for(uint32_t i=0;i<wnum;i++){
-    if(myC.groups[g].ways[i].valid==true&&(myC.groups[g].ways[i].tag==tag))
-    {
-      //assert(0);
-      uint32_t ans=0;
-      
-      for(int w=3;w>=0;w--){
-        ans=(ans<<8);
-        ans+=myC.groups[g].ways[i].data[offset+w];
-      }
-      return ans;
-    }
-  }
-  //缺失
-  for(uint32_t i=0;i<wnum;i++){
-    //assert(0);
-    //printf("%d\n",cache[g].valid[i]);
-    if(!myC.groups[g].ways[i].valid){
-      myC.groups[g].ways[i].valid=true;
-      mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[i].data);
-      myC.groups[g].ways[i].tag=tag;
-      //assert(0);
-      uint32_t ans=0;
-      
-      for(int w=3;w>=0;w--){
-        ans=ans<<8;
-        ans+=myC.groups[g].ways[i].data[offset+w];
-        
-      }
-      //assert(0);
-      return ans;
-      //assert(0);
-    }
-  }
-  //还满了
-  uint32_t lucker=rand()%wnum;
-  if(myC.groups[g].ways[lucker].dirty)mem_write((myC.groups[g].ways[lucker].tag<<glen)+g,myC.groups[g].ways[lucker].data);//写回操作
-  mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[lucker].data);
-  myC.groups[g].ways[lucker].tag=tag;
-
-  uint32_t ans=0;
-
-      for(int w=3;w>=0;w--){
-        ans=ans<<8;
-        ans=myC.groups[g].ways[lucker].data[offset+w];
-      }
-      //assert(0);
-      return ans;
-
-  //return 0;
-}
-// 往 cache 中 addr 地址所属的块写入数据 data，写掩码为 wmask
-// 例如当 wmask 为 0xff 时，只写入低8比特
-// 若缺失，需要从先内存中读入数据
-void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
- // addr=addr&~0x3;
-  uint32_t g=(addr>>BLOCK_WIDTH)&mask_with_len(glen);
-  uint32_t offset=addr&mask_with_len(BLOCK_WIDTH);
-  uint32_t tag=(addr>>(BLOCK_WIDTH+glen))& mask_with_len(tlen);
-  //找到了
-  //assert(0);
-  
-	for(uint32_t i=0;i<wnum;i++){
-    //printf("%d",cache[g].valid[i]);
-   //assert(0);
-    		if(myC.groups[g].ways[i].valid&&(myC.groups[g].ways[i].tag==tag))
-        { 
-          //assert(0);
-          myC.groups[g].ways[i].dirty=true;
-          //uint32_t rnum=(data&wmask);
-          //uint32_t  j=addr&mask_with_len(BLOCK_WIDTH);
-          //先当是按照单元来的
-          uint32_t* p=(uint32_t*)&myC.groups[g].ways[i].data[offset];
-          *p=(*p&~wmask)|(data&wmask);
-          return;
-        }
-  }
-  //缺失
-  for(int i=0;i<wnum;i++){
-    if(!myC.groups[g].ways[i].valid){
-      myC.groups[g].ways[i].valid=true;
-      mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[i].data);
-      myC.groups[g].ways[i].tag=tag;
-      myC.groups[g].ways[i].dirty=true;
-
-//assert(0);
-      //uint32_t rnum=(data&wmask);
-      //uint32_t  j=addr&mask_with_len(BLOCK_WIDTH);
-          //先当是按照单元来的
-          uint32_t* p=(uint32_t*)&myC.groups[g].ways[i].data[offset];
-          *p=(*p&~wmask)|(data&wmask);
-         return;
-         
-    }
-  }
-  //assert(0);
-  uint32_t lucker=rand()%wnum;
-  if(myC.groups[g].ways[lucker].dirty)mem_write((myC.groups[g].ways[lucker].tag<<glen)+g,myC.groups[g].ways[lucker].data);
-  mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[lucker].data);
-  myC.groups[g].ways[lucker].dirty=true;
-  myC.groups[g].ways[lucker].tag=tag;
-  uint32_t rnum=(data&wmask);
-  uint32_t  j=addr&mask_with_len(BLOCK_WIDTH);
-          //先当是按照单元来的
-          uint32_t* p=(uint32_t*)&myC.groups[g].ways[lucker].data[j];
-          *p=(*p&~wmask)|(data&wmask);
-  
-  //assert(0);
-
-  
-}
-// 初始化一个数据大小为 2^total_size_width B，关联度为 2^associativity_width 的 cache
-// 例如 init_cache(14, 2) 将初始化一个 16KB，4 路组相联的cache
-// 将所有 valid bit 置为无效即可
+// 初始化一个数据大小为`2^total_size_width`B, 关联度为`2^associativity_width`的cache
+// 例如`init_cache(14, 2)`将初始化一个16KB, 4路组相联的cache
+// 将所有valid bit置为无效即可
 void init_cache(int total_size_width, int associativity_width) {
-  //assert((exp2(associativity_width))<MAX_way);
-  //assert((uint64_t)(1<<total_size_width)<(uint64_t)(MAX_group<<6)*(uint64_t)(1<<associativity_width));
-  
-  wnum=exp2(associativity_width);//路数
-
-  glen=total_size_width-BLOCK_WIDTH-associativity_width;
-
-  gnum=exp2(glen);//（组数=总空间/路数/64B）//先不考虑不整除；
-
-  tlen=32-glen-BLOCK_WIDTH;//tag长度
-
-  //printf("%d\n",gnum);
-
-  //srand(time(NULL));
-  myC.groups=(group*)malloc(gnum*sizeof(group));
-
-  for(uint32_t i=0;i<gnum;i++){
-    myC.groups[i].ways=(line*)malloc(wnum*sizeof(line));
-    for(uint32_t j=0;j<wnum;j++){
-      myC.groups[i].ways[j].valid=0;
-      myC.groups[i].ways[j].dirty=0;
+    line_of_group = exp2(associativity_width);
+    group_count = exp2(total_size_width) / BLOCK_SIZE / line_of_group;
+    group_id_width = total_size_width - associativity_width - BLOCK_WIDTH;
+    tag_width = 32 - BLOCK_SIZE - group_id_width;
+    // 32bit
+    cache = (CacheSlot * *)malloc(sizeof(CacheSlot *) * group_count);
+    int i;
+    for (i = 0;i < group_count;i++) {
+        cache[i] = (CacheSlot *)calloc(line_of_group, sizeof(CacheSlot));
+        // 清零
     }
 
-  }
-  
+    return;
 }
 
+// 从cache中读出`addr`地址处的4字节数据
+// 若缺失, 需要先从内存中读入数据
+uint32_t cache_read(uintptr_t addr) {
+    try_increase(1);
+    uint32_t val;
+    uint32_t offset;
+    uint32_t group_id;
+    uint32_t tag;
 
+    addr = addr & ~0x3;
+    // addr align 4
+    offset = addr & ~(~0 << BLOCK_WIDTH);
+    // 相对块起始位置的偏移量
+    group_id = (addr >> 6) & ~(~0 << group_id_width);
+    tag = (addr >> (6 + group_id_width)) & ~(~0 << tag_width);
+    int i, j;
+    for (i = 0;i < line_of_group;i++) {
+		if (cache[group_id][i].valid && cache[group_id][i].tag == tag) {
+			// 判断有效位和标记
+			hit_increase(1);
+			val = 0;
+			for (j = 3;j >= 0;j--) {
+				val *= 0x100;
+				val += cache[group_id][i].data[offset + j];
+			}
+			// printf("step1 cache_read value: %#10x\n", val);
+			return val;
+		}
+	}
+	// 跳出循环说明命中失败
+	// 遍历该组的行尝试寻找未使用的行
+	for (i = 0;i < line_of_group;i++) {
+		if (!cache[group_id][i].valid) {
+			mem_read(addr >> BLOCK_WIDTH, cache[group_id][i].data);
+			// 从内存读取数据到cache
+			cache[group_id][i].tag = addr >> (BLOCK_WIDTH + group_id_width);
+			cache[group_id][i].valid = 1;
+			cache[group_id][i].modified = 0;
+			val = 0;
+			for (j = 3;j >= 0;j--) {
+                val *= 0x100;
+                val += cache[group_id][i].data[offset + j];
+			}
+			// printf("step2 cache_read value: %#10x\n", val);
+			return val;
+		}
+	}
+	// 未找到空闲行则进行随机替换
+	i = rand() % line_of_group;
+	if (cache[group_id][i].modified == 1) {
+		// 被替换的cache行的脏位为1则需先写回到内存中
+		mem_write((cache[group_id][i].tag << group_id_width) + group_id, cache[group_id][i].data);
+	}
+	mem_read(addr >> BLOCK_WIDTH, cache[group_id][i].data);
+	// 从内存读取数据到cache
+	cache[group_id][i].tag = addr >> (BLOCK_WIDTH + group_id_width);
+	cache[group_id][i].valid = 1;
+	cache[group_id][i].modified = 0;
+	val = 0;
+	for (j = 3;j >= 0;j--) {
+		val *= 0x100;
+		val += cache[group_id][i].data[offset + j];
+	}
+	// printf("step3 cache_read value: %#10x\n", val);
 
-void display_statistic(void) {
+	return val;
+}
+
+// 往cache中`addr`地址所属的块写入数据`data`, 写掩码为`wmask`
+// 例如当`wmask`为`0xff`时, 只写入低8比特
+// 若缺失, 需要从先内存中读入数据
+void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
+	try_increase(1);
+	uint32_t offset;
+	uint32_t group_id;
+	uint32_t tag;
+	uint32_t * ptr;
+
+	addr = addr & ~0x3;
+	// addr align 4
+	offset = addr & ~(~0 << BLOCK_WIDTH);
+	// 相对块起始位置的偏移量
+	group_id = (addr >> 6) & ~(~0 << group_id_width);
+	tag = (addr >> (6 + group_id_width)) & ~(~0 << tag_width);
+	int i;
+	for (i = 0;i < line_of_group;i++) {
+		if (cache[group_id][i].valid && cache[group_id][i].tag == tag) {
+			// 判断有效位和标记
+			hit_increase(1);
+			cache[group_id][i].modified = 1;
+			ptr = (uint32_t *)&cache[group_id][i].data[offset];
+			*ptr = (*ptr & ~wmask) | (data & wmask);
+			// printf("step1 cache_write ok\n");
+			return;
+		}
+	}
+	// 跳出循环说明命中失败
+	// 遍历该组的行尝试寻找未使用的行
+	for (i = 0;i < line_of_group;i++) {
+		if (!cache[group_id][i].valid) {
+			mem_read(addr >> BLOCK_WIDTH, cache[group_id][i].data);
+			// 从内存读取数据到cache
+			cache[group_id][i].tag = addr >> (BLOCK_WIDTH + group_id_width);
+			cache[group_id][i].valid = 1;
+			cache[group_id][i].modified = 1;
+			ptr = (uint32_t *)&cache[group_id][i].data[offset];
+			*ptr = (*ptr & ~wmask) | (data & wmask);
+			// printf("step2 cache_write ok\n");
+			return;
+		}
+	}
+	// 未找到空闲行则进行随机替换
+	i = rand() % line_of_group;
+	if (cache[group_id][i].modified == 1) {
+		// 被替换的cache行的脏位为1则需先写回到内存中
+		mem_write((cache[group_id][i].tag << group_id_width) + group_id, cache[group_id][i].data);
+	}
+	mem_read(addr >> BLOCK_WIDTH, cache[group_id][i].data);
+	// 从内存读取数据到cache
+	cache[group_id][i].tag = addr >> (BLOCK_WIDTH + group_id_width);
+	cache[group_id][i].valid = 1;
+	cache[group_id][i].modified = 1;
+	ptr = (uint32_t *)&cache[group_id][i].data[offset];
+	*ptr = (*ptr & ~wmask) | (data & wmask);
+	// printf("step3 cache_write ok\n");
+
+	return;
 }
