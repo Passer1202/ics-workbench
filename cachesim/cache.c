@@ -69,7 +69,7 @@ uint32_t cache_read(uintptr_t addr) {
   //assert(!(addr>>20));
   //assert(exp2(addr)<=MEM_SIZE);
 
-  //addr=addr&(~0x3);
+  addr=addr&(~0x3);
   uint32_t g=(addr>>BLOCK_WIDTH)&mask_with_len(glen);
 
   
@@ -139,7 +139,7 @@ uint32_t cache_read(uintptr_t addr) {
 // 例如当 wmask 为 0xff 时，只写入低8比特
 // 若缺失，需要从先内存中读入数据
 void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
-  //addr=addr&~0x3;
+  addr=addr&~0x3;
   uint32_t g=(addr>>BLOCK_WIDTH)&mask_with_len(glen);
   uint32_t offset=addr&mask_with_len(BLOCK_WIDTH);
   assert( ~(~0 << BLOCK_WIDTH)==mask_with_len(BLOCK_WIDTH));
