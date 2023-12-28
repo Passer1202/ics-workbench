@@ -205,8 +205,10 @@ void init_cache(int total_size_width, int associativity_width) {
     }
 
   }
+  assert(0);
 }
-assert(0);
+
+
 
 void display_statistic(void) {
 }
