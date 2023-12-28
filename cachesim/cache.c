@@ -69,7 +69,7 @@ uint32_t cache_read(uintptr_t addr) {
   //assert(!(addr>>20));
   //assert(exp2(addr)<=MEM_SIZE);
 
-  addr=addr&(~0x3);
+  //addr=addr&(~0x3);
   uint32_t g=(addr>>BLOCK_WIDTH)&mask_with_len(glen);
 
   
