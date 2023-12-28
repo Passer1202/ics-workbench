@@ -95,7 +95,7 @@ uint32_t cache_read(uintptr_t addr) {
         ans=(ans<<8)+myC.groups[g].ways[i].data[a+w];
         
       }
-      assert(0);
+      //assert(0);
       return ans;
       //assert(0);
     }
