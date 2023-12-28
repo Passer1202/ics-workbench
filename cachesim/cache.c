@@ -184,7 +184,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   mem_read(addr>>BLOCK_WIDTH,myC.groups[g].ways[lucker].data);
   myC.groups[g].ways[lucker].dirty=true;
   myC.groups[g].ways[lucker].valid=true;
-  myC.groups[g].ways[lucker].tag=addr >> (BLOCK_WIDTH + glen);;
+  myC.groups[g].ways[lucker].tag=addr >> (BLOCK_WIDTH + glen);
 
           //先当是按照单元来的
           uint32_t* p=(uint32_t*)&myC.groups[g].ways[lucker].data[offset];
