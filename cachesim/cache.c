@@ -23,7 +23,7 @@ uint32_t gnum=0;//组数
 static struct{
   bool valid[MAX_way];//是否有效
   bool dirty[MAX_way];
-  uint16_t tag[MAX_way];//标志位
+  uint32_t tag[MAX_way];//标志位
   uint8_t data[MAX_way][BLOCK_SIZE];//数据
 }cache[MAX_group];
 //定义cache
@@ -43,7 +43,7 @@ uint32_t cache_read(uintptr_t addr) {
 
   //命中
   for(int i=0;i<wnum;i++){
-    if(cache[g].valid[i]&&(cache[g].tag[i]==((addr>>6)/wnum)))
+    if(cache[g].valid[i]&&(cache[g].tag[i]==((addr>>8)/wnum)))
     assert(0);
       return cache[g].data[i][addr%BLOCK_SIZE];
   }
