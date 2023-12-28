@@ -70,7 +70,7 @@ uint32_t cache_read(uintptr_t addr) {
 
   uint32_t g=(addr>>BLOCK_WIDTH)&mask_with_len(glen);
 
-  addr=addr&(~0x3);
+  //addr=addr&(~0x3);
   //printf("%d\n",gnum);
   //printf("%d\n",g);
   //命中
@@ -133,7 +133,7 @@ uint32_t cache_read(uintptr_t addr) {
 // 例如当 wmask 为 0xff 时，只写入低8比特
 // 若缺失，需要从先内存中读入数据
 void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
-  addr=addr&~0x3;
+ // addr=addr&~0x3;
   uint32_t g=(addr>>BLOCK_WIDTH)&mask_with_len(glen);
   uint32_t offset=addr&mask_with_len(BLOCK_WIDTH);
   uint32_t tag=(addr>>(BLOCK_WIDTH+glen))& mask_with_len(tlen);
@@ -202,9 +202,9 @@ void init_cache(int total_size_width, int associativity_width) {
 
   gnum=exp2(glen);//（组数=总空间/路数/64B）//先不考虑不整除；
 
-  tlen=32-glen-BLOCK_SIZE;//tag长度
+  tlen=32-glen-BLOCK_WIDTH;//tag长度
 
-  printf("%d\n",gnum);
+  //printf("%d\n",gnum);
 
   //srand(time(NULL));
   myC.groups=(group*)malloc(gnum*sizeof(group));
