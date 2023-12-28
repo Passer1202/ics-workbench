@@ -21,11 +21,11 @@ uint32_t wnum=0;//路数
 uint32_t gnum=0;//组数
 
 static struct{
-  bool valid[MAX_way];//是否有效
-  bool dirty[MAX_way];
-  uint32_t tag[MAX_way];//标志位
-  uint8_t data[MAX_way][BLOCK_SIZE];//数据
-}cache[MAX_group];
+  bool valid[16];//是否有效
+  bool dirty[16];
+  uint32_t tag[16];//标志位
+  uint8_t data[16][64];//数据
+}cache[10000];
 //定义cache
 
 // TODO: implement the following functions
