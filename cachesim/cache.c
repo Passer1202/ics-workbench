@@ -44,6 +44,8 @@ typedef struct
 
 cache myC;
 
+uint32_t tlen;
+
 //struct{
 //  bool valid[16];//是否有效
  // bool dirty[16];
@@ -61,7 +63,7 @@ cache myC;
 
 uint32_t cache_read(uintptr_t addr) {
   
-  assert(!(addr>>20));
+  //assert(!(addr>>20));
   //assert(exp2(addr)<=MEM_SIZE);
 
   uint32_t g=(addr>>6)%gnum;
@@ -182,8 +184,9 @@ void init_cache(int total_size_width, int associativity_width) {
   assert((uint64_t)(1<<total_size_width)<(uint64_t)(MAX_group<<6)*(uint64_t)(1<<associativity_width));
   
   wnum=exp2(associativity_width);//路数
-  gnum=((uint64_t)(1<<(total_size_width-6))/wnum);//（组数=总空间/路数/64B）//先不考虑不整除；
+  gnum=((uint64_t)(1<<(total_size_width-6-associativity_width)));//（组数=总空间/路数/64B）//先不考虑不整除；
 
+  tlen=32-total_size_width+associativity_width;
   //printf("%d\n",total_size_width);
 
   //srand(time(NULL));
