@@ -79,11 +79,11 @@ uint32_t cache_read(uintptr_t addr) {
   if(cache[g].dirty[lucker])mem_write(cache[g].tag[lucker]*wnum,cache[g].data[lucker]);//写回操作
   mem_read(addr>>6,cache[g].data[lucker]);
   cache[g].tag[lucker]=(addr>>6)/wnum;
-  
+
   uint32_t ans=0;
       uint32_t a=addr%BLOCK_SIZE;
       for(int w=3;w>=0;w--){
-        ans=(ans<<8)+cache[g].data[i][a+w];
+        ans=(ans<<8)+cache[g].data[lucker][a+w];
       }
       return ans;
 
