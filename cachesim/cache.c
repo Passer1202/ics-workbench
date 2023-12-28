@@ -47,7 +47,7 @@ uint32_t cache_read(uintptr_t addr) {
   for(uint32_t i=0;i<wnum;i++){
     if(cache[g].valid[i]==true&&(cache[g].tag[i]==((addr>>6)/wnum)))
     {
-      //assert(0);
+      assert(0);
       uint32_t ans=0;
       uint32_t a=addr%BLOCK_SIZE;
       for(int w=3;w>=0;w--){
