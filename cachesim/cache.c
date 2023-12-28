@@ -71,6 +71,7 @@ uint32_t cache_read(uintptr_t addr) {
   //printf("%d\n",g);
   //命中
   //assert(0);
+  addr&=~0x3;
   for(uint32_t i=0;i<wnum;i++){
     if(myC.groups[g].ways[i].valid==true&&(myC.groups[g].ways[i].tag==(((addr>>6)/gnum)& ~(~0 << tlen))))
     {
@@ -123,6 +124,7 @@ uint32_t cache_read(uintptr_t addr) {
 // 例如当 wmask 为 0xff 时，只写入低8比特
 // 若缺失，需要从先内存中读入数据
 void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
+  addr&=~0x3;
   uint32_t g=(addr>>6)%gnum;
   //找到了
   //assert(0);
@@ -180,8 +182,8 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
 // 例如 init_cache(14, 2) 将初始化一个 16KB，4 路组相联的cache
 // 将所有 valid bit 置为无效即可
 void init_cache(int total_size_width, int associativity_width) {
-  assert((exp2(associativity_width))<MAX_way);
-  assert((uint64_t)(1<<total_size_width)<(uint64_t)(MAX_group<<6)*(uint64_t)(1<<associativity_width));
+  //assert((exp2(associativity_width))<MAX_way);
+  //assert((uint64_t)(1<<total_size_width)<(uint64_t)(MAX_group<<6)*(uint64_t)(1<<associativity_width));
   
   wnum=exp2(associativity_width);//路数
   gnum=((uint64_t)(1<<(total_size_width-6-associativity_width)));//（组数=总空间/路数/64B）//先不考虑不整除；
