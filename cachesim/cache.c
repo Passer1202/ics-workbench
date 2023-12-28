@@ -78,7 +78,7 @@ void init_cache(int total_size_width, int associativity_width) {
   gnum=((uint64_t)(1<<(total_size_width-6))/wnum);//（组数=总空间/路数/64B）//先不考虑不整除；
 
 
-  srand(time(NULL));
+  //srand(time(NULL));
 
   for(int i=0;i<gnum;i++){
     for(int j=0;j<wnum;j++){
