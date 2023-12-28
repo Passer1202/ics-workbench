@@ -55,7 +55,7 @@ uint32_t cache_read(uintptr_t addr) {
   for(uint32_t i=0;i<wnum;i++){
     //assert(0);
     //printf("%d\n",cache[g].valid[i]);
-    if(cache[g].valid[i]==false){
+    if(!cache[g].valid[i]){
       cache[g].valid[i]=true;
       mem_read(addr>>6,cache[g].data[i]);
       cache[g].tag[i]=(addr>>6)/wnum;
