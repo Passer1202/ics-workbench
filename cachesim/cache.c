@@ -127,7 +127,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
    //assert(0);
     		if(myC.groups[g].ways[i].valid&&(myC.groups[g].ways[i].tag==((addr>>6)/gnum)))
         { 
-          assert(0);
+          //assert(0);
           myC.groups[g].ways[i].dirty=true;
           uint32_t rnum=(data&wmask);
           int  j=addr%BLOCK_SIZE;
@@ -166,7 +166,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
           break;
     }
   }
-
+  assert(0);
   int lucker=rand()%wnum;
   mem_read(addr>>6,myC.groups[g].ways[lucker].data);
   myC.groups[g].ways[lucker].tag=(addr>>6)/gnum;
